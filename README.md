@@ -199,7 +199,7 @@ npx @bmad/installer@latest
 
 ## 📄 License
 
-MIT © [Contributors](https://github.com/yourusername/shadcn-doctor/graphs/contributors)
+MIT © [Contributors](https://github.com/njtan142/shadcn-doctor/graphs/contributors)
 
 ---
 

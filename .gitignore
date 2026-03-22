@@ -48,6 +48,7 @@ htmlcov/
 _bmad-output/
 .bmad-session/
 *.bmad-log
+.github/skills/
 
 # AI Model directories (temporary/cache)
 .agent/
