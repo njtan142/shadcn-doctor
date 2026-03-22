@@ -46,6 +46,7 @@ htmlcov/
 
 # BMAD Framework outputs
 _bmad-output/
+_bmad/
 .bmad-session/
 *.bmad-log
 .github/skills/
