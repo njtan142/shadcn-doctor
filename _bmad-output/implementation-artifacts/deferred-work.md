@@ -1,5 +1,9 @@
 # Deferred Work
 
+## Deferred from: code review of 3-1-form-control-detection-rules-checkbox-switch-radiogroup (2026-03-29)
+
+- Missing test for `role="switch"` checkbox exclusion — checkbox rule correctly excludes `role="switch"` in logic but has no dedicated test case proving the exclusion path works (`src/rules/prefer-shadcn-checkbox.test.ts`)
+
 ## Deferred from: code review of 1-6-cli-argument-handling-error-cases (2026-03-29)
 
 - Single non-TS file (e.g. `.js`) passed as explicit path produces "No TypeScript files found in: {path}" — misleading because the file exists but has the wrong type. Needs a distinct error or message for this case (`src/analyzer.ts`, `src/scanner/scanner.ts`).

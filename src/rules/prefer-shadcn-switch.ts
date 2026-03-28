@@ -31,7 +31,7 @@ export const preferShadcnSwitch: Rule = {
     const roleAttr = attributes.find((a) => a.getNameNode().getText() === 'role');
 
     const typeValue = typeAttr?.getInitializer()?.getText().replace(/['"]/g, '');
-    const roleValue = roleAttr?.getInitializer()?.getText().replace(/['"]/g, '');
+    const roleValue = roleAttr?.getInitializer()?.getText().replace(/['"]/g, '') ?? '';
 
     if (
       (tagName === 'input' && typeValue === 'checkbox' && roleValue === 'switch') ||

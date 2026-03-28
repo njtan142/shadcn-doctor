@@ -1,6 +1,6 @@
 # Story 3.1: Form Control Detection Rules (Checkbox, Switch, RadioGroup)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -133,3 +133,9 @@ minimax-2.5
 - `src/rules/prefer-shadcn-checkbox.test.ts` (modified)
 - `src/rules/prefer-shadcn-switch.test.ts` (modified)
 - `src/rules/prefer-shadcn-radio-group.test.ts` (modified)
+
+### Review Findings
+
+- [x] [Review][Patch] Shorthand `role` attribute (no value) causes undefined `roleValue` in checkbox exclusion check — `checkbox.ts:36` — fixed: `?? ''`
+- [x] [Review][Patch] Shorthand `role` attribute causes undefined `roleValue` in switch rule — `switch.ts:34` — fixed: `?? ''`
+- [x] [Review][Defer] Missing test for `role="switch"` checkbox exclusion — checkbox test file — deferred, pre-existing test gap
