@@ -10,6 +10,15 @@ export function runRules(
   const findings: Finding[] = [];
   const warnings: Warning[] = [];
 
+  const normalizedRoot = rootPath.endsWith(path.sep) ? rootPath : rootPath + path.sep;
+  const absoluteFilePath = sourceFile.getFilePath();
+  if (!absoluteFilePath.startsWith(normalizedRoot) && absoluteFilePath !== rootPath) {
+    const warning: Warning = {
+      message: `File "${absoluteFilePath}" is outside rootPath "${rootPath}" — skipped`,
+    };
+    return { findings: [], warnings: [warning] };
+  }
+
   const filePath = path.relative(rootPath, sourceFile.getFilePath()).split(path.sep).join(path.posix.sep);
 
   // Group rules by the SyntaxKind they visit for efficiency
@@ -43,8 +52,9 @@ export function runRules(
             });
           }
         } catch (error) {
+          const msg = error instanceof Error ? error.message : String(error);
           warnings.push({
-            message: `Rule "${rule.id}" failed on file "${filePath}" at line ${node.getStartLineNumber()}: ${error instanceof Error ? error.message : String(error)}`,
+            message: `Rule "${rule.id}" failed on file "${filePath}" at line ${node.getStartLineNumber()}: ${msg}`,
           });
         }
       }

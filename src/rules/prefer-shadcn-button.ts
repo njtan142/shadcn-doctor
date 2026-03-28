@@ -8,12 +8,10 @@ export const preferShadcnButton: Rule = {
   check: (node: Node): Finding | null => {
     let tagName = '';
     if (node.isKind(SyntaxKind.JsxOpeningElement)) {
-      tagName = (node as JsxOpeningElement).getTagNameNode().getText();
+      tagName = (node as JsxOpeningElement).getTagNameNode().getText().trim();
     } else if (node.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      tagName = (node as JsxSelfClosingElement).getTagNameNode().getText();
+      tagName = (node as JsxSelfClosingElement).getTagNameNode().getText().trim();
     }
-    console.log(`Checking tag: ${tagName}`);
-
     if (tagName === 'button') {
       return {
         file: '', // Filled by engine

@@ -8,6 +8,15 @@ import type { AnalysisResult, Finding, Warning } from './types.js';
 export async function analyze(targetPath: string): Promise<AnalysisResult> {
   const absoluteRootPath = path.resolve(targetPath);
   const files = await discoverFiles(absoluteRootPath);
+
+  if (files.length === 0) {
+    return {
+      pass: true,
+      summary: { total: 0, filesScanned: 0 },
+      findings: [],
+      warnings: [{ message: 'No files found to analyze' }],
+    };
+  }
   
   const allFindings: Finding[] = [];
   const allWarnings: Warning[] = [];
