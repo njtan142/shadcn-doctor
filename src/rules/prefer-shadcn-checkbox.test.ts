@@ -14,10 +14,10 @@ describe('prefer-shadcn-checkbox rule', () => {
   it('should detect raw <input type="checkbox"> elements', () => {
     const filePath = path.join(fixturesDir, 'raw-html-elements.tsx');
     const sourceFile = project.addSourceFileAtPath(filePath);
-    const { findings } = runRules(sourceFile, [preferShadcnCheckbox], fixturesDir);
+    const { findings } = runRules(sourceFile, [preferShadcnCheckbox], fixturesDir);   
+    console.log('Findings:', JSON.stringify(findings, null, 2));
 
-    expect(findings).toHaveLength(1);
-    expect(findings[0]).toMatchObject({
+    expect(findings).toHaveLength(1);    expect(findings[0]).toMatchObject({
       rule: 'prefer-shadcn-checkbox',
       violation: 'Raw <input type="checkbox"> detected. Use <Checkbox> from shadcn/ui.',
       element: 'input',

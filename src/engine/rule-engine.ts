@@ -12,7 +12,7 @@ export function runRules(
 
   const normalizedRootForward = rootPath.replace(/\\/g, '/');
   const normalizedRoot = normalizedRootForward.endsWith('/') ? normalizedRootForward : normalizedRootForward + '/';
-  const absoluteFilePath = sourceFile.getFilePath();
+  const absoluteFilePath = decodeURIComponent(sourceFile.getFilePath());
   const normalizedFilePath = absoluteFilePath.replace(/\\/g, '/');
   if (!normalizedFilePath.startsWith(normalizedRoot) && normalizedFilePath !== normalizedRootForward) {
     const warning: Warning = {

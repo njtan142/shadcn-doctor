@@ -8,16 +8,6 @@ import type { AnalysisResult, Finding, Warning } from './types.js';
 
 export async function analyze(targetPath: string): Promise<AnalysisResult> {
   const absoluteRootPath = path.resolve(targetPath);
-
-  try {
-    await fs.stat(absoluteRootPath);
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-      throw new Error(`Path not found: ${targetPath}`);
-    }
-    throw err;
-  }
-
   const files = await discoverFiles(absoluteRootPath);
 
   if (files.length === 0) {
@@ -41,6 +31,10 @@ export async function analyze(targetPath: string): Promise<AnalysisResult> {
 
     allFindings.push(...findings);
     allWarnings.push(...warnings);
+  }
+
+  if (files.length > 0 && filesScanned === 0) {
+    throw new Error(`No TypeScript files could be successfully parsed in: ${targetPath}`);
   }
 
   // Sort findings by file path then line then column for determinism

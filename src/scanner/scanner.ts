@@ -5,14 +5,22 @@ const IGNORED_DIRS = new Set(['node_modules', 'dist', '.git', '.next', 'coverage
 
 export async function discoverFiles(targetPath: string): Promise<string[]> {
   const absoluteTargetPath = path.resolve(targetPath);
-  const stat = await fs.stat(absoluteTargetPath);
+  let stat;
+  try {
+    stat = await fs.stat(absoluteTargetPath);
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+      throw new Error(`Path not found: ${targetPath}`);
+    }
+    throw err;
+  }
 
   if (stat.isFile()) {
     const ext = path.extname(absoluteTargetPath);
     if (ext === '.ts' || ext === '.tsx') {
       return [absoluteTargetPath.split(path.sep).join(path.posix.sep)];
     }
-    return [];
+    throw new Error(`The file "${targetPath}" exists but is not a TypeScript (.ts or .tsx) file.`);
   }
 
   const files: string[] = [];
