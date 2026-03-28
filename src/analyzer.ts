@@ -1,0 +1,51 @@
+import path from 'node:path';
+import { discoverFiles } from './scanner/scanner.js';
+import { parseFile } from './parser/parser.js';
+import { runRules } from './engine/rule-engine.js';
+import { ALL_RULES } from './rules/index.js';
+import type { AnalysisResult, Finding, Warning } from './types.js';
+
+export async function analyze(targetPath: string): Promise<AnalysisResult> {
+  const absoluteRootPath = path.resolve(targetPath);
+  const files = await discoverFiles(absoluteRootPath);
+  
+  const allFindings: Finding[] = [];
+  const allWarnings: Warning[] = [];
+  let filesScanned = 0;
+
+  for (const file of files) {
+    const sourceFileOrWarning = parseFile(file);
+    
+    if ('message' in sourceFileOrWarning) {
+      allWarnings.push(sourceFileOrWarning as Warning);
+      continue;
+    }
+
+    filesScanned++;
+    const { findings, warnings } = runRules(sourceFileOrWarning, ALL_RULES, absoluteRootPath);
+    
+    allFindings.push(...findings);
+    allWarnings.push(...warnings);
+  }
+
+  // Sort findings by file path then line then column for determinism
+  allFindings.sort((a, b) => {
+    if (a.file !== b.file) {
+      return a.file.localeCompare(b.file);
+    }
+    if (a.line !== b.line) {
+      return (a.line ?? 0) - (b.line ?? 0);
+    }
+    return (a.column ?? 0) - (b.column ?? 0);
+  });
+
+  return {
+    pass: allFindings.length === 0,
+    summary: {
+      total: allFindings.length,
+      filesScanned,
+    },
+    findings: allFindings,
+    warnings: allWarnings,
+  };
+}
