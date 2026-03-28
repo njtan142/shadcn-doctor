@@ -7,6 +7,10 @@ export const RawButton = () => {
       <input />
       <textarea></textarea>
       <select></select>
+      <input type="checkbox" />
+      <input type="checkbox" role="switch" />
+      <div role="switch"></div>
+      <input type="radio" />
     </div>
   );
 };
