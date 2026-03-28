@@ -1,6 +1,6 @@
 # Story 3.2: Layout & Feedback Component Detection Rules
 
-Status: ready-for-dev
+Status: in-progress
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -30,43 +30,43 @@ so that structural and feedback components are included in the analysis.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create `prefer-shadcn-table` rule (AC: 1, 7)
-  - [ ] Create `src/rules/prefer-shadcn-table.ts`
-  - [ ] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `table`
-  - [ ] Return finding with: rule `prefer-shadcn-table`, violation `"Raw <table> detected. Use <Table> from shadcn/ui."`
+- [x] Task 1: Create `prefer-shadcn-table` rule (AC: 1, 7)
+  - [x] Create `src/rules/prefer-shadcn-table.ts`
+  - [x] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `table`
+  - [x] Return finding with: rule `prefer-shadcn-table`, violation `"Raw <table> detected. Use <Table> from shadcn/ui."`
 
-- [ ] Task 2: Create `prefer-shadcn-dialog` rule (AC: 2, 7)
-  - [ ] Create `src/rules/prefer-shadcn-dialog.ts`
-  - [ ] Detect `JsxOpeningElement` for `dialog` and `div` tags
-  - [ ] Match `dialog` (raw) or `div` with `role="dialog"` attribute
-  - [ ] Set violation message accordingly: `"Raw <dialog> detected. Use <Dialog> from shadcn/ui."` or `"Custom modal <div> detected. Use <Dialog> from shadcn/ui."`
+- [x] Task 2: Create `prefer-shadcn-dialog` rule (AC: 2, 7)
+  - [x] Create `src/rules/prefer-shadcn-dialog.ts`
+  - [x] Detect `JsxOpeningElement` for `dialog` and `div` tags
+  - [x] Match `dialog` (raw) or `div` with `role="dialog"` attribute
+  - [x] Set violation message accordingly: `"Raw <dialog> detected. Use <Dialog> from shadcn/ui."` or `"Custom modal <div> detected. Use <Dialog> from shadcn/ui."`
 
-- [ ] Task 3: Create `prefer-shadcn-alert` rule (AC: 3, 7)
-  - [ ] Create `src/rules/prefer-shadcn-alert.ts`
-  - [ ] Detect `JsxOpeningElement` for `div` tags
-  - [ ] Match `div` with `role="alert"` or alert-like ARIA patterns
-  - [ ] Return finding with: rule `prefer-shadcn-alert`, violation `"Custom alert <div> detected. Use <Alert> from shadcn/ui."`
+- [x] Task 3: Create `prefer-shadcn-alert` rule (AC: 3, 7)
+  - [x] Create `src/rules/prefer-shadcn-alert.ts`
+  - [x] Detect `JsxOpeningElement` for `div` tags
+  - [x] Match `div` with `role="alert"` or alert-like ARIA patterns
+  - [x] Return finding with: rule `prefer-shadcn-alert`, violation `"Custom alert <div> detected. Use <Alert> from shadcn/ui."`
 
-- [ ] Task 4: Create `prefer-shadcn-badge` rule (AC: 4, 7, 8)
-  - [ ] Create `src/rules/prefer-shadcn-badge.ts`
-  - [ ] Detect `JsxOpeningElement` for `span` and `div` tags
-  - [ ] Check `className` for badge-like terms (`badge`, `tag`, `chip`, `label`)
-  - [ ] Apply conservative matching: require multiple signals or a clear indicator
-  - [ ] Return finding with: rule `prefer-shadcn-badge`, violation `"Custom badge detected. Use <Badge> from shadcn/ui."`
+- [x] Task 4: Create `prefer-shadcn-badge` rule (AC: 4, 7, 8)
+  - [x] Create `src/rules/prefer-shadcn-badge.ts`
+  - [x] Detect `JsxOpeningElement` for `span` and `div` tags
+  - [x] Check `className` for badge-like terms (`badge`, `tag`, `chip`, `label`)
+  - [x] Apply conservative matching: require multiple signals or a clear indicator
+  - [x] Return finding with: rule `prefer-shadcn-badge`, violation `"Custom badge detected. Use <Badge> from shadcn/ui."`
 
-- [ ] Task 5: Create `prefer-shadcn-avatar` rule (AC: 5, 7, 8)
-  - [ ] Create `src/rules/prefer-shadcn-avatar.ts`
-  - [ ] Detect `JsxOpeningElement` and `JsxSelfClosingElement` for `img` tags
-  - [ ] Check `className` for `rounded-full` and small sizing (e.g., `w-10 h-10`, `size-8`)
-  - [ ] Return finding with: rule `prefer-shadcn-avatar`, violation `"Custom avatar detected. Use <Avatar> from shadcn/ui."`
+- [x] Task 5: Create `prefer-shadcn-avatar` rule (AC: 5, 7, 8)
+  - [x] Create `src/rules/prefer-shadcn-avatar.ts`
+  - [x] Detect `JsxOpeningElement` and `JsxSelfClosingElement` for `img` tags
+  - [x] Check `className` for `rounded-full` and small sizing (e.g., `w-10 h-10`, `size-8`)
+  - [x] Return finding with: rule `prefer-shadcn-avatar`, violation `"Custom avatar detected. Use <Avatar> from shadcn/ui."`
 
-- [ ] Task 6: Create `prefer-shadcn-tabs` rule (AC: 6, 7, 8)
-  - [ ] Create `src/rules/prefer-shadcn-tabs.ts`
-  - [ ] Detect patterns of `button` groups with tab-related roles or class names
-  - [ ] Return finding with: rule `prefer-shadcn-tabs`, violation `"Custom tabs detected. Use <Tabs> from shadcn/ui."`
+- [x] Task 6: Create `prefer-shadcn-tabs` rule (AC: 6, 7, 8)
+  - [x] Create `src/rules/prefer-shadcn-tabs.ts`
+  - [x] Detect patterns of `button` groups with tab-related roles or class names
+  - [x] Return finding with: rule `prefer-shadcn-tabs`, violation `"Custom tabs detected. Use <Tabs> from shadcn/ui."`
 
-- [ ] Task 7: Register rules in `src/rules/index.ts`
-  - [ ] Import all new rules and add to `ALL_RULES` array
+- [x] Task 7: Register rules in `src/rules/index.ts`
+  - [x] Import all new rules and add to `ALL_RULES` array
 
 - [ ] Task 8: Update fixtures and write unit tests
   - [ ] Add raw variants to `src/__fixtures__/raw-html-elements.tsx`
