@@ -3,34 +3,15 @@ import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Command } from 'commander';
+import type { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { run } from './cli.js';
+import { createProgram, run } from './cli.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixturesDir = path.resolve(__dirname, '__fixtures__');
 
 const require = createRequire(import.meta.url);
 const { version } = require('../package.json') as { version: string };
-
-/**
- * Build the same Commander program as defined in cli.ts for help/version inspection.
- * This mirrors the program configuration to allow unit testing without spawning a subprocess.
- */
-function buildProgram() {
-  const program = new Command();
-  program
-    .name('shadcn-doctor')
-    .description('Detect missed shadcn/ui component adoption in TypeScript/TSX files')
-    .version(version)
-    .argument('[path]', 'File or directory to scan', '.')
-    .option('--format <format>', 'Output format: human or json', 'human')
-    .addHelpText(
-      'after',
-      '\nExit codes:\n  0  No findings (pass)\n  1  Findings detected\n  2  Fatal error',
-    );
-  return program;
-}
 
 /**
  * Capture the full help output from a Commander program including addHelpText sections.
@@ -78,16 +59,14 @@ describe('CLI run() function', () => {
       expect(process.exitCode).not.toBe(2);
     });
 
-    it('defaults targetPath to "." when called with no arguments (AC #3)', async () => {
-      // Verify the default parameter behaviour: run() without args defaults to '.'
-      // We test this indirectly — run() is exported with default `targetPath = '.'`
-      // so it accepts being called with no targetPath argument at all.
-      // To avoid timing out scanning all of node_modules, we verify the function
-      // signature has the correct default by calling it on a bounded known-good path.
+    it('run() accepts being called with no targetPath argument; default is "." (AC #3)', async () => {
+      // Verify the default parameter behaviour: run() is exported with `targetPath = '.'`
+      // so TypeScript accepts a zero-argument call. We pass a bounded path to avoid
+      // scanning the entire project tree during the test.
       await run(fixturesDir, 'human');
-      // No fatal error — cwd exists and contains TS files
+      // No fatal error — fixtures directory exists and contains TS files
       expect(process.exitCode).not.toBe(2);
-    }, 10000);
+    });
   });
 
   describe('AC #4: path-not-found error', () => {
@@ -157,20 +136,20 @@ describe('CLI run() function', () => {
 
 describe('AC #6: Commander program --help output', () => {
   it('help text contains program description', () => {
-    const program = buildProgram();
+    const program = createProgram();
     const helpText = captureHelpOutput(program);
     expect(helpText).toContain('shadcn-doctor');
     expect(helpText).toContain('shadcn/ui');
   });
 
   it('help text contains usage syntax with optional path argument', () => {
-    const program = buildProgram();
+    const program = createProgram();
     const helpText = captureHelpOutput(program);
     expect(helpText).toContain('[path]');
   });
 
   it('help text describes the --format flag', () => {
-    const program = buildProgram();
+    const program = createProgram();
     const helpText = captureHelpOutput(program);
     expect(helpText).toContain('--format');
     expect(helpText).toContain('human');
@@ -178,7 +157,7 @@ describe('AC #6: Commander program --help output', () => {
   });
 
   it('help text contains exit code documentation', () => {
-    const program = buildProgram();
+    const program = createProgram();
     const helpText = captureHelpOutput(program);
     expect(helpText).toContain('Exit codes');
     expect(helpText).toContain('0');
@@ -187,7 +166,7 @@ describe('AC #6: Commander program --help output', () => {
   });
 
   it('help text includes --help and --version flags', () => {
-    const program = buildProgram();
+    const program = createProgram();
     const helpText = captureHelpOutput(program);
     expect(helpText).toContain('--help');
     expect(helpText).toContain('--version');
@@ -196,7 +175,7 @@ describe('AC #6: Commander program --help output', () => {
 
 describe('AC #7: Commander program --version output', () => {
   it('program version matches package.json version', () => {
-    const program = buildProgram();
+    const program = createProgram();
     // Commander stores the version; verify it matches package.json
     expect(program.version()).toBe(version);
   });

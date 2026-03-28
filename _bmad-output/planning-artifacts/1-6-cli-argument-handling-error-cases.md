@@ -1,6 +1,6 @@
 # Story 1.6: CLI Argument Handling & Error Cases
 
-Status: review
+Status: in-progress
 
 ## Story
 
@@ -278,3 +278,13 @@ None.
 - src/cli.ts (modified)
 - src/analyzer.ts (modified)
 - src/cli.test.ts (created)
+
+### Review Findings
+
+- [ ] [Review][Patch] `fs.stat` catch swallows all I/O errors as "Path not found" — including EPERM, ENAMETOOLONG, etc. [src/analyzer.ts:12-16] — Narrow catch to check `(err as NodeJS.ErrnoException).code === 'ENOENT'`; rethrow or produce a distinct message for other error codes.
+- [ ] [Review][Patch] `--format` option accepts any string — no `.choices(['human', 'json'])` enforcement [src/cli.ts:42] — Add `.choices(['human', 'json'])` to the Commander option so invalid values produce a parse-time error. Spec subtask explicitly says "with choices `human` and `json`".
+- [ ] [Review][Patch] AC #3 test does not exercise the default parameter — calls `run(fixturesDir, 'human')` instead of `run()` with no args [src/cli.test.ts:81-90] — Either call `run()` with no arguments against a bounded known path, or rename the test to accurately describe what it tests. The actual default `targetPath = '.'` is never exercised.
+- [ ] [Review][Patch] `buildProgram()` in test file is a manual copy of the `isMain` block — silent divergence risk [src/cli.test.ts:20-33] — Export a shared program factory from `cli.ts` (or a separate module) so help/version tests exercise the actual registered configuration rather than a duplicate that can drift.
+- [x] [Review][Defer] Single non-TS file (e.g. `.js`) produces "No TypeScript files found" instead of a file-type mismatch message [src/analyzer.ts:20-22] — deferred, pre-existing `discoverFiles` behavior unchanged by this story
+- [x] [Review][Defer] TOCTOU race: `analyzer.ts` stat and `discoverFiles` stat are not atomic — path could vanish between them [src/analyzer.ts:12, src/scanner/scanner.ts:8] — deferred, pre-existing architecture concern
+- [x] [Review][Defer] All-warnings scan path: if every file returns a parse Warning, `filesScanned=0` and `pass:true` — edge case untested [src/analyzer.ts:28-41] — deferred, pre-existing behavior not changed by this story

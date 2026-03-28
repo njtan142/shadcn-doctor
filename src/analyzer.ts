@@ -11,8 +11,11 @@ export async function analyze(targetPath: string): Promise<AnalysisResult> {
 
   try {
     await fs.stat(absoluteRootPath);
-  } catch {
-    throw new Error(`Path not found: ${targetPath}`);
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+      throw new Error(`Path not found: ${targetPath}`);
+    }
+    throw err;
   }
 
   const files = await discoverFiles(absoluteRootPath);

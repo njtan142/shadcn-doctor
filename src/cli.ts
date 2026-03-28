@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 import { analyze } from './analyzer.js';
 import { formatHuman } from './formatters/human-formatter.js';
 
@@ -29,24 +29,33 @@ export async function run(targetPath = '.', _format = 'human') {
   }
 }
 
-const isMain =
-  import.meta.url.startsWith('file:') && fileURLToPath(import.meta.url) === process.argv[1];
-
-if (isMain) {
+export function createProgram() {
   const program = new Command();
   program
     .name('shadcn-doctor')
     .description('Detect missed shadcn/ui component adoption in TypeScript/TSX files')
     .version(version)
     .argument('[path]', 'File or directory to scan', '.')
-    .option('--format <format>', 'Output format: human or json', 'human')
+    .addOption(
+      new Option('--format <format>', 'Output format: human or json')
+        .default('human')
+        .choices(['human', 'json']),
+    )
     .addHelpText(
       'after',
       '\nExit codes:\n  0  No findings (pass)\n  1  Findings detected\n  2  Fatal error',
-    )
-    .action(async (targetPath: string, options: { format: string }) => {
-      await run(targetPath, options.format);
-    });
+    );
+  return program;
+}
+
+const isMain =
+  import.meta.url.startsWith('file:') && fileURLToPath(import.meta.url) === process.argv[1];
+
+if (isMain) {
+  const program = createProgram();
+  program.action(async (targetPath: string, options: { format: string }) => {
+    await run(targetPath, options.format);
+  });
 
   program.parse(process.argv);
 }
