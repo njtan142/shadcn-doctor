@@ -1,4 +1,4 @@
-import { SyntaxKind, type Node, type JsxOpeningElement, type JsxAttribute } from 'ts-morph';
+import { type JsxAttribute, type JsxOpeningElement, type Node, SyntaxKind } from 'ts-morph';
 import type { Finding, Rule } from '../types.js';
 
 export const preferShadcnBadge: Rule = {
@@ -8,23 +8,29 @@ export const preferShadcnBadge: Rule = {
   check: (node: Node): Finding | null => {
     const openingElement = node as JsxOpeningElement;
     const tagName = openingElement.getTagNameNode().getText().trim();
-    const attributes = openingElement.getAttributes().filter(a => a.isKind(SyntaxKind.JsxAttribute)) as JsxAttribute[];
+    const attributes = openingElement
+      .getAttributes()
+      .filter((a) => a.isKind(SyntaxKind.JsxAttribute)) as JsxAttribute[];
 
     if (tagName === 'span' || tagName === 'div') {
-      const classNameAttr = attributes.find(a => a.getName() === 'className');
-      const classNameValue = classNameAttr?.getInitializer()?.getText().replace(/['"`]/g, '') || '';
+      const classNameAttr = attributes.find(
+        (a) => a.getNameNode().getText() === 'className' || a.getNameNode().getText() === 'class',
+      );
+      if (!classNameAttr) return null;
+      const initializer = classNameAttr.getInitializer();
+      if (!initializer) return null;
+      const classNameValue = initializer.getText().replace(/['"`]/g, '').toLowerCase();
 
       const keywords = ['badge', 'tag', 'chip', 'label'];
       const stylingClasses = ['rounded-full', 'px-', 'py-', 'bg-', 'text-', 'border-'];
 
-      const hasKeyword = keywords.some(k => classNameValue.toLowerCase().includes(k));
-      const hasStyling = stylingClasses.some(s => classNameValue.includes(s));
+      const hasKeyword = keywords.some((k) => classNameValue.includes(k));
+      const hasStyling = stylingClasses.some((s) => classNameValue.includes(s));
 
-      // Conservative matching: require a keyword and at least some styling-like class
       if (hasKeyword && hasStyling) {
         return {
           file: '', // Filled by engine
-          line: 0,  // Filled by engine
+          line: 0, // Filled by engine
           column: 0, // Filled by engine
           rule: 'prefer-shadcn-badge',
           violation: 'Custom badge detected. Use <Badge> from shadcn/ui.',

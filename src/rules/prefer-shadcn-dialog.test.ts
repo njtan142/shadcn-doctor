@@ -17,8 +17,9 @@ describe('prefer-shadcn-dialog rule', () => {
     const { findings } = runRules(sourceFile, [preferShadcnDialog], fixturesDir);
 
     const dialogFindings = findings.filter((f) => f.rule === 'prefer-shadcn-dialog');
-    expect(dialogFindings.length).toBeGreaterThanOrEqual(1);
-    expect(dialogFindings[0]).toMatchObject({
+    const divDialogFindings = dialogFindings.filter((f) => f.element === 'div');
+    expect(divDialogFindings.length).toBeGreaterThanOrEqual(1);
+    expect(divDialogFindings[0]).toMatchObject({
       rule: 'prefer-shadcn-dialog',
       violation: 'Custom modal <div> detected. Use <Dialog> from shadcn/ui.',
       element: 'div',
