@@ -1,25 +1,14 @@
 import path from 'node:path';
 import type { Node, SourceFile, SyntaxKind } from 'ts-morph';
+import { formatSuggestedLine, resolveConfig } from '../config/index.js';
 import type { Finding, Rule, Warning } from '../types.js';
 
-function extractEventHandlers(sourceLine: string): string {
-  const eventHandlerRegex = /((?:on\w+)\s*=\s*\{(?:[^{}]|\{[^{}]*\})*\})/g;
-  const handlers: string[] = [];
-  let match;
-  while ((match = eventHandlerRegex.exec(sourceLine)) !== null) {
-    handlers.push(match[1]);
-  }
-  return handlers.join(' ');
-}
-
-function generateSuggestedLine(replacement: string, sourceLine: string): string {
-  const elementNameRegex = /^<(\w+)/;
-  const elementMatch = sourceLine.match(elementNameRegex);
-  if (!elementMatch) {
-    return `<${replacement}>`;
-  }
-  const originalAttrs = sourceLine.slice(elementMatch[0].length);
-  return `<${replacement}${originalAttrs}>`;
+function generateSuggestedLine(
+  replacement: string,
+  sourceLine: string,
+  config: ReturnType<typeof resolveConfig>,
+): string {
+  return formatSuggestedLine(sourceLine, replacement, config);
 }
 
 export function runRules(
@@ -29,11 +18,12 @@ export function runRules(
 ): { findings: Finding[]; warnings: Warning[] } {
   const findings: Finding[] = [];
   const warnings: Warning[] = [];
+  const config = resolveConfig();
 
   const normalizedRootForward = rootPath.replace(/\\/g, '/');
   const normalizedRoot = normalizedRootForward.endsWith('/')
     ? normalizedRootForward
-    : normalizedRootForward + '/';
+    : `${normalizedRootForward}/`;
   const absoluteFilePath = decodeURIComponent(sourceFile.getFilePath());
   const normalizedFilePath = absoluteFilePath.replace(/\\/g, '/');
   if (
@@ -51,18 +41,17 @@ export function runRules(
     .split(path.sep)
     .join(path.posix.sep);
 
-  // Group rules by the SyntaxKind they visit for efficiency
   const rulesByKind = new Map<SyntaxKind, Rule[]>();
   for (const rule of rules) {
     for (const kind of rule.nodeTypes) {
       if (!rulesByKind.has(kind)) {
         rulesByKind.set(kind, []);
       }
-      rulesByKind.get(kind)!.push(rule);
+      rulesByKind.get(kind)?.push(rule);
     }
   }
 
-  sourceFile.forEachDescendant((node) => {
+  sourceFile.forEachDescendant((node: Node) => {
     const kind = node.getKind();
     const rulesToRun = rulesByKind.get(kind);
 
@@ -71,7 +60,6 @@ export function runRules(
         try {
           const finding = rule.check(node);
           if (finding) {
-            // Ensure the finding has correct file and location info
             const { line, column } = sourceFile.getLineAndColumnAtPos(node.getStart());
             const fullText = sourceFile.getFullText();
             const pos = node.getStart();
@@ -86,7 +74,7 @@ export function runRules(
               lineEnd++;
             }
             const sourceLine = fullText.slice(lineStart, lineEnd);
-            const suggestedLine = generateSuggestedLine(finding.replacement, sourceLine);
+            const suggestedLine = generateSuggestedLine(finding.replacement, sourceLine, config);
 
             findings.push({
               ...finding,
