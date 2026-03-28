@@ -19,6 +19,8 @@ function makeFinding(overrides: Partial<Finding> = {}): Finding {
     suggestion: 'Use <Button> from shadcn/ui.',
     element: 'button',
     replacement: 'Button',
+    sourceLine: '<button onClick={handleClick}>Click</button>',
+    suggestedLine: '<Button onClick={handleClick}>',
     ...overrides,
   };
 }

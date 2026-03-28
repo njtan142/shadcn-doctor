@@ -1,5 +1,5 @@
 import type { AnalysisResult, Finding } from '../types.js';
-import { bold, dim } from './colors.js';
+import { bold, dim, green, red } from './colors.js';
 
 /**
  * Groups findings by file path, preserving the already-sorted order from analyze().
@@ -25,6 +25,17 @@ function formatFindingLine(finding: Finding): string {
   const lineCol = dim(`${finding.line}:${finding.column}`);
   const rule = dim(finding.rule);
   return `  ${lineCol}  ${finding.violation}  ${rule}`;
+}
+
+/**
+ * Formats diff lines for a finding:
+ * - Red line with `-` prefix showing source line
+ * - Green line with `+` prefix showing suggested line
+ */
+function formatDiffLines(finding: Finding): [string, string] {
+  const redLine = red(`- ${finding.sourceLine}`);
+  const greenLine = green(`+ ${finding.suggestedLine}`);
+  return [redLine, greenLine];
 }
 
 /**
@@ -56,14 +67,21 @@ export function formatHuman(result: AnalysisResult): string {
     // Bold file path header
     parts.push(bold(filePath));
 
-    // Each finding line
+    // Each finding with its diff lines
     for (const finding of fileFindings) {
       parts.push(formatFindingLine(finding));
+      const [redLine, greenLine] = formatDiffLines(finding);
+      parts.push(redLine);
+      parts.push(greenLine);
+      // Blank line after each finding block
+      parts.push('');
     }
   }
 
-  // Blank line before summary footer
-  parts.push('');
+  // Remove the last extra blank line before summary
+  if (parts[parts.length - 1] === '') {
+    parts.pop();
+  }
 
   // Summary line
   parts.push(`${summary.total} findings in ${summary.filesScanned} files scanned.`);
