@@ -45,7 +45,8 @@ htmlcov/
 !.env.example
 
 # BMAD Framework outputs
-_bmad-output/
+_bmad-output/*
+!_bmad-output/planning-artifacts/
 _bmad/
 .bmad-session/
 *.bmad-log
