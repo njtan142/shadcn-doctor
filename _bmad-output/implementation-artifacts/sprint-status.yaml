@@ -1,0 +1,65 @@
+# generated: 2026-03-28
+# last_updated: 2026-03-28
+# project: shadcn-doctor
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: {project-root}/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-03-28
+last_updated: 2026-03-28
+project: shadcn-doctor
+project_key: NOKEY
+tracking_system: file-system
+story_location: "{project-root}/_bmad-output/implementation-artifacts"
+
+development_status:
+  epic-1: backlog
+  1-1-project-initialization-cli-skeleton: backlog
+  1-2-file-discovery-ast-parsing: backlog
+  1-3-rule-engine-button-detection: backlog
+  1-4-human-readable-output-formatter: backlog
+  1-5-input-textarea-and-select-detection-rules: backlog
+  1-6-cli-argument-handling-error-cases: backlog
+  epic-1-retrospective: optional
+  epic-2: backlog
+  2-1-json-output-formatter: backlog
+  2-2-ai-agent-loop-validation: backlog
+  epic-2-retrospective: optional
+  epic-3: backlog
+  3-1-form-control-detection-rules-checkbox-switch-radiogroup: backlog
+  3-2-layout-feedback-component-detection-rules: backlog
+  3-3-custom-css-styled-implementation-detection: backlog
+  epic-3-retrospective: optional
+  epic-4: backlog
+  4-1-source-line-extraction-diff-output: backlog
+  4-2-style-aware-replacement-generation: backlog
+  epic-4-retrospective: optional
