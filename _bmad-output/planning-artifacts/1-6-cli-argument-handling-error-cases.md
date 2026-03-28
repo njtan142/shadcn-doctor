@@ -1,6 +1,6 @@
 # Story 1.6: CLI Argument Handling & Error Cases
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -42,33 +42,33 @@ so that I can easily scan any part of my project with a single command.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Wire Commander into `src/cli.ts` replacing raw `process.argv` parsing (AC: #6, #7, #1, #2, #3)
-  - [ ] Import and configure Commander `Command` with program name, description, version, and optional `[path]` argument
-  - [ ] Add `--format <format>` option with choices `human` and `json`, defaulting to `human`
-  - [ ] Add help text describing exit codes (0 = pass, 1 = findings, 2 = fatal error)
-  - [ ] Call `program.parse(process.argv)` and extract `path` arg (default `'.'`) and `format` option
-  - [ ] Pass `format` option through to `run()` for future use (Epic 2 wires JSON formatter)
+- [x] Task 1: Wire Commander into `src/cli.ts` replacing raw `process.argv` parsing (AC: #6, #7, #1, #2, #3)
+  - [x] Import and configure Commander `Command` with program name, description, version, and optional `[path]` argument
+  - [x] Add `--format <format>` option with choices `human` and `json`, defaulting to `human`
+  - [x] Add help text describing exit codes (0 = pass, 1 = findings, 2 = fatal error)
+  - [x] Call `program.parse(process.argv)` and extract `path` arg (default `'.'`) and `format` option
+  - [x] Pass `format` option through to `run()` for future use (Epic 2 wires JSON formatter)
 
-- [ ] Task 2: Implement path-not-found error case in `src/analyzer.ts` (AC: #4)
-  - [ ] Call `fs.stat` on the resolved target path before invoking `discoverFiles`
-  - [ ] If `stat` throws `ENOENT`, throw an Error with message `Path not found: {targetPath}` (use the user-provided path, not the resolved one)
-  - [ ] Let `cli.ts` `run()` catch block handle the error and write it to stderr with exit code 2
+- [x] Task 2: Implement path-not-found error case in `src/analyzer.ts` (AC: #4)
+  - [x] Call `fs.stat` on the resolved target path before invoking `discoverFiles`
+  - [x] If `stat` throws `ENOENT`, throw an Error with message `Path not found: {targetPath}` (use the user-provided path, not the resolved one)
+  - [x] Let `cli.ts` `run()` catch block handle the error and write it to stderr with exit code 2
 
-- [ ] Task 3: Implement no-files-found error case in `src/analyzer.ts` (AC: #5)
-  - [ ] Replace the current "silent success" early return (which returns `pass: true` with no findings) with an error throw
-  - [ ] Throw an Error with message `No TypeScript files found in: {targetPath}` (user-provided path)
-  - [ ] Let `cli.ts` `run()` catch block handle it with exit code 2
+- [x] Task 3: Implement no-files-found error case in `src/analyzer.ts` (AC: #5)
+  - [x] Replace the current "silent success" early return (which returns `pass: true` with no findings) with an error throw
+  - [x] Throw an Error with message `No TypeScript files found in: {targetPath}` (user-provided path)
+  - [x] Let `cli.ts` `run()` catch block handle it with exit code 2
 
-- [ ] Task 4: Write tests for CLI argument handling (AC: #1–#7)
-  - [ ] Create `src/cli.test.ts` testing: default `.` path, explicit file path, explicit dir path
-  - [ ] Test path-not-found error produces correct stderr message and exit code 2
-  - [ ] Test empty-dir error produces correct stderr message and exit code 2
-  - [ ] Test `--help` flag output contains expected documentation keywords
-  - [ ] Test `--version` flag output contains the version from `package.json`
+- [x] Task 4: Write tests for CLI argument handling (AC: #1–#7)
+  - [x] Create `src/cli.test.ts` testing: default `.` path, explicit file path, explicit dir path
+  - [x] Test path-not-found error produces correct stderr message and exit code 2
+  - [x] Test empty-dir error produces correct stderr message and exit code 2
+  - [x] Test `--help` flag output contains expected documentation keywords
+  - [x] Test `--version` flag output contains the version from `package.json`
 
-- [ ] Task 5: Update `bin/shadcn-doctor.js` if CLI signature changes (AC: #1–#3)
-  - [ ] Confirm `bin/shadcn-doctor.js` still calls `run()` without arguments (Commander handles argv internally)
-  - [ ] No change needed if `run()` already calls `program.parse()` internally
+- [x] Task 5: Update `bin/shadcn-doctor.js` if CLI signature changes (AC: #1–#3)
+  - [x] Confirm `bin/shadcn-doctor.js` still calls `run()` without arguments (Commander handles argv internally)
+  - [x] No change needed if `run()` already calls `program.parse()` internally
 
 ## Dev Notes
 
@@ -260,6 +260,21 @@ claude-sonnet-4-6
 
 ### Debug Log References
 
+None.
+
 ### Completion Notes List
 
+- Replaced raw `process.argv[2]` parsing in `src/cli.ts` with Commander `Command` setup including name, description, version, `[path]` argument, `--format` option, and exit code help text.
+- Updated `run()` signature to accept `_format` parameter (prefixed with `_` as it is a stub for Epic 2's JSON formatter; biome lint requires unused params be prefixed with `_`).
+- Updated the `catch` block in `run()` to output only `Error: {message}` without stack trace, matching AC #4/#5 format requirements.
+- Added `fs.stat` check in `src/analyzer.ts` before `discoverFiles` — throws `Error: Path not found: {targetPath}` using the user-provided path.
+- Replaced silent empty-files early return in `src/analyzer.ts` with a throw: `Error: No TypeScript files found in: {targetPath}`.
+- Created `src/cli.test.ts` with 16 tests covering all 7 ACs. Tests use `vi.spyOn` on `process.stderr.write`/`process.stdout.write` and a `buildProgram()` + `captureHelpOutput()` helper to inspect Commander help output without spawning subprocesses.
+- Confirmed `bin/shadcn-doctor.js` requires no changes — it calls `run()` with no arguments and Commander handles `process.argv` internally.
+- Pre-existing failures in `src/engine/rule-engine.test.ts` (2 tests) were present before this story and are not caused by these changes.
+
 ### File List
+
+- src/cli.ts (modified)
+- src/analyzer.ts (modified)
+- src/cli.test.ts (created)

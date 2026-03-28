@@ -1,30 +1,33 @@
+import fs from 'node:fs/promises';
 import path from 'node:path';
-import { discoverFiles } from './scanner/scanner.js';
-import { parseFile } from './parser/parser.js';
 import { runRules } from './engine/rule-engine.js';
+import { parseFile } from './parser/parser.js';
 import { ALL_RULES } from './rules/index.js';
+import { discoverFiles } from './scanner/scanner.js';
 import type { AnalysisResult, Finding, Warning } from './types.js';
 
 export async function analyze(targetPath: string): Promise<AnalysisResult> {
   const absoluteRootPath = path.resolve(targetPath);
+
+  try {
+    await fs.stat(absoluteRootPath);
+  } catch {
+    throw new Error(`Path not found: ${targetPath}`);
+  }
+
   const files = await discoverFiles(absoluteRootPath);
 
   if (files.length === 0) {
-    return {
-      pass: true,
-      summary: { total: 0, filesScanned: 0 },
-      findings: [],
-      warnings: [{ message: 'No files found to analyze' }],
-    };
+    throw new Error(`No TypeScript files found in: ${targetPath}`);
   }
-  
+
   const allFindings: Finding[] = [];
   const allWarnings: Warning[] = [];
   let filesScanned = 0;
 
   for (const file of files) {
     const sourceFileOrWarning = parseFile(file);
-    
+
     if ('message' in sourceFileOrWarning) {
       allWarnings.push(sourceFileOrWarning as Warning);
       continue;
@@ -32,7 +35,7 @@ export async function analyze(targetPath: string): Promise<AnalysisResult> {
 
     filesScanned++;
     const { findings, warnings } = runRules(sourceFileOrWarning, ALL_RULES, absoluteRootPath);
-    
+
     allFindings.push(...findings);
     allWarnings.push(...warnings);
   }
