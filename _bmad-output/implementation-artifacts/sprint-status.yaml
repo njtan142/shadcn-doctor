@@ -60,5 +60,5 @@ development_status:
   epic-3-retrospective: optional
   epic-4: in-progress
   4-1-source-line-extraction-diff-output: ready-for-dev
-  4-2-style-aware-replacement-generation: backlog
+  4-2-style-aware-replacement-generation: ready-for-dev
   epic-4-retrospective: optional
