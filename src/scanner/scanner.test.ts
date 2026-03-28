@@ -11,7 +11,9 @@ describe('File Discovery Module', () => {
     // We expect it to find index.ts at least.
     expect(Array.isArray(files)).toBe(true);
     expect(files.every((f) => f.endsWith('.ts') || f.endsWith('.tsx'))).toBe(true);
-    expect(files).toContain('index.ts');
+    // Now expecting absolute paths, converted to posix
+    const expectedFile = path.join(fixturesDir, 'index.ts').split(path.sep).join(path.posix.sep);
+    expect(files).toContain(expectedFile);
 
     // Check sorting
     const sortedFiles = [...files].sort();
@@ -23,15 +25,16 @@ describe('File Discovery Module', () => {
     const files = await discoverFiles(singleFile);
 
     expect(files.length).toBe(1);
-    expect(files[0]).toBe('types.ts');
+    const expectedFile = singleFile.split(path.sep).join(path.posix.sep);
+    expect(files[0]).toBe(expectedFile);
   });
 
-  it('should use forward slashes for output paths relative to the scan root', async () => {
+  it('should use forward slashes and return absolute paths', async () => {
     const targetDir = path.join(process.cwd(), 'src');
     const files = await discoverFiles(targetDir);
 
     expect(files.length).toBeGreaterThan(0);
     expect(files.every((f) => !f.includes('\\'))).toBe(true); // No backslashes
-    expect(files.every((f) => !path.isAbsolute(f))).toBe(true); // Relative paths
+    expect(files.every((f) => path.isAbsolute(f) || f.startsWith('/'))).toBe(true); // Absolute paths
   });
 });

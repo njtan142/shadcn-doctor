@@ -1,45 +1,40 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+const IGNORED_DIRS = new Set(['node_modules', 'dist', '.git', '.next', 'coverage']);
+
 export async function discoverFiles(targetPath: string): Promise<string[]> {
-  const stat = await fs.stat(targetPath);
+  const absoluteTargetPath = path.resolve(targetPath);
+  const stat = await fs.stat(absoluteTargetPath);
 
   if (stat.isFile()) {
-    // If it's a single file, just return its basename if it's TS/TSX
-    const ext = path.extname(targetPath);
+    const ext = path.extname(absoluteTargetPath);
     if (ext === '.ts' || ext === '.tsx') {
-      return [path.basename(targetPath)];
+      return [absoluteTargetPath.split(path.sep).join(path.posix.sep)];
     }
     return [];
   }
 
-  // If directory, use recursive readdir
-  const entries = await fs.readdir(targetPath, { recursive: true, withFileTypes: true });
+  const files: string[] = [];
 
-  const files = entries
-    .filter((entry) => entry.isFile())
-    .map((entry) => {
-      // Relative path from the targetPath (the scan root)
-      // readdir with recursive: true returns paths relative to the directory passed to it in node 20+
-      // Actually, entry.parentPath is available in newer node versions, but let's just use path.relative
-      // In node > 18.17, fs.readdir with { recursive: true } returns paths in `entry.name` if string,
-      // but withFileTypes: true returns Dirent. `entry.path` or `entry.parentPath` might be available.
-      // To be safe and compatible, we can just use path.join and path.relative.
-      const fullPath = path.join(
-        'parentPath' in entry
-          ? ((entry as Record<string, unknown>).parentPath as string)
-          : entry.path,
-        entry.name,
-      );
-      return path.relative(targetPath, fullPath);
-    })
-    .filter((relativePath) => {
-      const ext = path.extname(relativePath);
-      return ext === '.ts' || ext === '.tsx';
-    });
+  async function walk(dir: string) {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (!IGNORED_DIRS.has(entry.name)) {
+          await walk(fullPath);
+        }
+      } else if (entry.isFile()) {
+        const ext = path.extname(entry.name);
+        if (ext === '.ts' || ext === '.tsx') {
+          files.push(fullPath);
+        }
+      }
+    }
+  }
 
-  // Convert to posix and sort
-  const normalized = files.map((p) => p.split(path.sep).join(path.posix.sep)).sort();
+  await walk(absoluteTargetPath);
 
-  return normalized;
+  return files.map((p) => p.split(path.sep).join(path.posix.sep)).sort();
 }

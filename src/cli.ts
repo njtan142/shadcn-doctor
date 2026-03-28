@@ -1,5 +1,12 @@
+import { fileURLToPath } from 'node:url';
+
 export function run() {
   console.log('shadcn-doctor CLI');
 }
 
-run();
+const isMain =
+  import.meta.url.startsWith('file:') && fileURLToPath(import.meta.url) === process.argv[1];
+
+if (isMain) {
+  run();
+}
