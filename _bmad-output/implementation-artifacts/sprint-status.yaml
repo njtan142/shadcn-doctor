@@ -47,7 +47,7 @@ development_status:
   1-2-file-discovery-ast-parsing: review
   1-3-rule-engine-button-detection: ready-for-dev
   1-4-human-readable-output-formatter: ready-for-dev
-  1-5-input-textarea-and-select-detection-rules: backlog
+  1-5-input-textarea-and-select-detection-rules: ready-for-dev
   1-6-cli-argument-handling-error-cases: backlog
   epic-1-retrospective: optional
   epic-2: backlog
