@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-28
-last_updated: 2026-04-01 # updated by create-story for 3-1
+last_updated: 2026-04-02 # updated by create-story for 3-2
 project: shadcn-doctor
 project_key: NOKEY
 tracking_system: file-system
@@ -56,7 +56,7 @@ development_status:
   epic-2-retrospective: optional
   epic-3: in-progress
   3-1-form-control-detection-rules-checkbox-switch-radiogroup: ready-for-dev
-  3-2-layout-feedback-component-detection-rules: backlog
+  3-2-layout-feedback-component-detection-rules: ready-for-dev
   3-3-custom-css-styled-implementation-detection: backlog
   epic-3-retrospective: optional
   epic-4: backlog
