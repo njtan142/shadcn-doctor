@@ -16,7 +16,7 @@ describe('prefer-shadcn-select rule', () => {
     const sourceFile = project.addSourceFileAtPath(filePath);
     const { findings } = runRules(sourceFile, [preferShadcnSelect], fixturesDir);
 
-    expect(findings.length).toBeGreaterThanOrEqual(1);
+    expect(findings).toHaveLength(1);
     expect(findings[0]).toMatchObject({
       rule: 'prefer-shadcn-select',
       violation: 'Raw <select> detected. Use <Select> from shadcn/ui.',

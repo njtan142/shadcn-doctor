@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-28
-last_updated: 2026-03-29
+last_updated: 2026-03-29 # updated by code review
 project: shadcn-doctor
 project_key: NOKEY
 tracking_system: file-system
@@ -47,7 +47,7 @@ development_status:
   1-2-file-discovery-ast-parsing: review
   1-3-rule-engine-button-detection: ready-for-dev
   1-4-human-readable-output-formatter: ready-for-dev
-  1-5-input-textarea-and-select-detection-rules: ready-for-dev
+  1-5-input-textarea-and-select-detection-rules: in-progress
   1-6-cli-argument-handling-error-cases: backlog
   epic-1-retrospective: optional
   epic-2: backlog

@@ -16,7 +16,7 @@ describe('prefer-shadcn-input rule', () => {
     const sourceFile = project.addSourceFileAtPath(filePath);
     const { findings } = runRules(sourceFile, [preferShadcnInput], fixturesDir);
 
-    expect(findings.length).toBeGreaterThanOrEqual(1);
+    expect(findings).toHaveLength(1);
     expect(findings[0]).toMatchObject({
       rule: 'prefer-shadcn-input',
       violation: 'Raw <input> detected. Use <Input> from shadcn/ui.',

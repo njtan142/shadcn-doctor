@@ -1,6 +1,6 @@
 # Story 1.5: Input, Textarea, and Select Detection Rules
 
-Status: review
+Status: in-progress
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -325,6 +325,16 @@ None.
 - src/__fixtures__/raw-html-elements.tsx (modified)
 - src/__fixtures__/clean-component.tsx (modified)
 - src/engine/rule-engine.ts (modified — Windows path normalization fix)
+
+### Review Findings
+
+- [ ] [Review][Patch] Wrong rule used in prefer-shadcn-select.test.ts false-positive test — the "should not detect shadcn/ui `<Select>` component" test calls `runRules(sourceFile, [preferShadcnInput], fixturesDir)` instead of `[preferShadcnSelect]`; the test does not actually verify the select rule's false-positive path [src/rules/prefer-shadcn-select.test.ts:31]
+- [ ] [Review][Patch] Loose `toBeGreaterThanOrEqual(1)` assertions in unit detection tests mask double-firing regressions — replace with `toHaveLength(1)` in prefer-shadcn-input.test.ts, prefer-shadcn-textarea.test.ts, and prefer-shadcn-select.test.ts [src/rules/prefer-shadcn-input.test.ts:17, prefer-shadcn-textarea.test.ts:17, prefer-shadcn-select.test.ts:17]
+- [ ] [Review][Patch] Shared ts-morph Project instance across integration test `it` blocks risks stale AST or duplicate `addSourceFileAtPath` errors — use `project.getSourceFile(filePath) ?? project.addSourceFileAtPath(filePath)` pattern [src/rules/all-rules-integration.test.ts:47]
+- [ ] [Review][Patch] Path normalization in rule-engine.ts is incomplete for mixed-separator rootPath (e.g. `C:/foo\bar`) — `split(path.sep)` only replaces the OS separator; a path with both `/` and `\` is not fully normalised; use `.replace(/\\/g, '/')` instead [src/engine/rule-engine.ts:13-14]
+- [x] [Review][Defer] Integration test creates inline file at projectRoot-resolved path; if projectRoot resolves differently in CI the file-outside-root guard fires and the test produces 0 findings [src/rules/all-rules-integration.test.ts:28] — deferred, pre-existing
+- [x] [Review][Defer] Self-closing `<textarea />` and `<select />` JSX variants are handled by the rules but have no dedicated test coverage — regression risk if nodeTypes changes [src/rules/prefer-shadcn-textarea.ts, prefer-shadcn-select.ts] — deferred, pre-existing
+- [x] [Review][Defer] absoluteFilePath from ts-morph may contain URI-encoded characters (e.g. %20 in spaces), causing startsWith path guard to fail and silently skip the file [src/engine/rule-engine.ts:15] — deferred, pre-existing
 
 ## Change Log
 

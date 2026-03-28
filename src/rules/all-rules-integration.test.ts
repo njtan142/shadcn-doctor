@@ -43,7 +43,7 @@ describe('all-rules integration', () => {
 
   it('should produce all findings from raw-html-elements.tsx fixture in line-number order', () => {
     const filePath = path.join(fixturesDir, 'raw-html-elements.tsx');
-    const sourceFile = project.addSourceFileAtPath(filePath);
+    const sourceFile = project.getSourceFile(filePath) ?? project.addSourceFileAtPath(filePath);
     const { findings } = runRules(sourceFile, ALL_RULES, fixturesDir);
 
     // 3 button findings + 1 input + 1 textarea + 1 select = 6

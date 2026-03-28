@@ -16,7 +16,7 @@ describe('prefer-shadcn-textarea rule', () => {
     const sourceFile = project.addSourceFileAtPath(filePath);
     const { findings } = runRules(sourceFile, [preferShadcnTextarea], fixturesDir);
 
-    expect(findings.length).toBeGreaterThanOrEqual(1);
+    expect(findings).toHaveLength(1);
     expect(findings[0]).toMatchObject({
       rule: 'prefer-shadcn-textarea',
       violation: 'Raw <textarea> detected. Use <Textarea> from shadcn/ui.',
