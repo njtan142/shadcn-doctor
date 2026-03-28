@@ -12,13 +12,13 @@ export async function run(targetPath = '.') {
     }
 
     // Findings output to stdout
-    process.stdout.write(`${formatHuman(result)}\n`);
+    process.stdout.write(formatHuman(result));
 
     // Exit code: 0 = pass, 1 = findings found
     process.exitCode = result.pass ? 0 : 1;
   } catch (err: unknown) {
-    const description = 'Unexpected error';
-    const detail = err instanceof Error ? err.message : String(err);
+    const description = err instanceof Error ? err.message : String(err);
+    const detail = err instanceof Error ? (err.stack ?? err.message) : String(err);
     process.stderr.write(`Error: ${description}: ${detail}\n`);
     process.exitCode = 2;
   }
@@ -29,5 +29,8 @@ const isMain =
 
 if (isMain) {
   const targetPath = process.argv[2] ?? '.';
-  run(targetPath);
+  run(targetPath).catch((err) => {
+    process.stderr.write(`Error: ${err.message}\n`);
+    process.exitCode = 2;
+  });
 }

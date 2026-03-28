@@ -5,21 +5,16 @@
  */
 import pc from 'picocolors';
 
-function colorsEnabled(): boolean {
-  // NO_COLOR takes priority over everything (https://no-color.org/)
-  if (process.env.NO_COLOR !== undefined) {
-    return false;
-  }
-  // FORCE_COLOR overrides TTY detection
-  if (process.env.FORCE_COLOR !== undefined) {
-    return true;
-  }
-  // Default: only enable colors when stdout is a TTY
-  return process.stdout.isTTY === true;
-}
+// Evaluate once at module load time so every call is O(1) and consistent.
+// NO_COLOR takes priority over everything (https://no-color.org/)
+// FORCE_COLOR overrides TTY detection
+// Default: only enable colors when stdout is a TTY
+const COLORS_ENABLED: boolean =
+  process.env.NO_COLOR === undefined &&
+  (process.env.FORCE_COLOR !== undefined || process.stdout.isTTY === true);
 
 function wrap(fn: (text: string) => string, text: string): string {
-  return colorsEnabled() ? fn(text) : text;
+  return COLORS_ENABLED ? fn(text) : text;
 }
 
 export function bold(text: string): string {

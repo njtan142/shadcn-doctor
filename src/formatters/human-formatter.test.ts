@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AnalysisResult, Finding } from '../types.js';
 import { formatHuman } from './human-formatter.js';
 
@@ -207,7 +207,7 @@ describe('formatHuman', () => {
   });
 
   describe('FORCE_COLOR=1 re-enables colors', () => {
-    it('re-enables colors when FORCE_COLOR is set even without TTY', () => {
+    it('re-enables colors when FORCE_COLOR is set even without TTY', async () => {
       delete process.env.NO_COLOR;
       process.env.FORCE_COLOR = '1';
       Object.defineProperty(process.stdout, 'isTTY', {
@@ -215,14 +215,21 @@ describe('formatHuman', () => {
         writable: true,
         configurable: true,
       });
+
+      // COLORS_ENABLED is memoized at module load time, so we must reload the
+      // module with FORCE_COLOR already set to get colored output.
+      vi.resetModules();
+      const { formatHuman: formatHumanForced } = await import('./human-formatter.js');
+
       const findings = [makeFinding({ file: 'src/foo.tsx', line: 10, column: 2 })];
       const result = makeResult({
         pass: false,
         summary: { total: 1, filesScanned: 1 },
         findings,
       });
-      const output = formatHuman(result);
-      // With FORCE_COLOR, bold/dim should add ANSI sequences — at minimum output contains the text
+      const output = formatHumanForced(result);
+      // With FORCE_COLOR, bold/dim must add ANSI escape sequences
+      expect(hasAnsi(output)).toBe(true);
       expect(output).toContain('src/foo.tsx');
       expect(output).toContain('10:2');
     });

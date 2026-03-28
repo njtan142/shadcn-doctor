@@ -66,7 +66,7 @@ export function formatHuman(result: AnalysisResult): string {
   parts.push('');
 
   // Summary line
-  parts.push(`${findings.length} findings in ${summary.filesScanned} files scanned.`);
+  parts.push(`${summary.total} findings in ${summary.filesScanned} files scanned.`);
 
   return parts.join('\n');
 }
