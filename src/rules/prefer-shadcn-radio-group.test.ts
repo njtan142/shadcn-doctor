@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { Project } from 'ts-morph';
-import { preferShadcnRadioGroup } from './prefer-shadcn-radio-group.js';
-import { runRules } from '../engine/rule-engine.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Project } from 'ts-morph';
+import { describe, expect, it } from 'vitest';
+import { runRules } from '../engine/rule-engine.js';
+import { preferShadcnRadioGroup } from './prefer-shadcn-radio-group.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixturesDir = path.resolve(__dirname, '../__fixtures__');
@@ -22,7 +22,7 @@ describe('prefer-shadcn-radio-group rule', () => {
       violation: 'Raw <input type="radio"> detected. Use <RadioGroup> from shadcn/ui.',
       element: 'input',
       replacement: 'RadioGroup',
-      line: 13,
+      line: 15,
     });
   });
 

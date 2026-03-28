@@ -1,4 +1,10 @@
-import { SyntaxKind, type Node, type JsxOpeningElement, type JsxSelfClosingElement, type JsxAttribute } from 'ts-morph';
+import {
+  type JsxAttribute,
+  type JsxOpeningElement,
+  type JsxSelfClosingElement,
+  type Node,
+  SyntaxKind,
+} from 'ts-morph';
 import type { Finding, Rule } from '../types.js';
 
 export const preferShadcnSwitch: Rule = {
@@ -7,18 +13,22 @@ export const preferShadcnSwitch: Rule = {
   nodeTypes: [SyntaxKind.JsxOpeningElement, SyntaxKind.JsxSelfClosingElement],
   check: (node: Node): Finding | null => {
     let tagName = '';
-    let attributes: (JsxAttribute)[] = [];
+    let attributes: JsxAttribute[] = [];
 
     if (node.isKind(SyntaxKind.JsxOpeningElement)) {
       tagName = (node as JsxOpeningElement).getTagNameNode().getText().trim();
-      attributes = (node as JsxOpeningElement).getAttributes().filter(a => a.isKind(SyntaxKind.JsxAttribute)) as JsxAttribute[];
+      attributes = (node as JsxOpeningElement)
+        .getAttributes()
+        .filter((a) => a.isKind(SyntaxKind.JsxAttribute)) as JsxAttribute[];
     } else if (node.isKind(SyntaxKind.JsxSelfClosingElement)) {
       tagName = (node as JsxSelfClosingElement).getTagNameNode().getText().trim();
-      attributes = (node as JsxSelfClosingElement).getAttributes().filter(a => a.isKind(SyntaxKind.JsxAttribute)) as JsxAttribute[];
+      attributes = (node as JsxSelfClosingElement)
+        .getAttributes()
+        .filter((a) => a.isKind(SyntaxKind.JsxAttribute)) as JsxAttribute[];
     }
 
-    const typeAttr = attributes.find(a => a.getName() === 'type');
-    const roleAttr = attributes.find(a => a.getName() === 'role');
+    const typeAttr = attributes.find((a) => a.getNameNode().getText() === 'type');
+    const roleAttr = attributes.find((a) => a.getNameNode().getText() === 'role');
 
     const typeValue = typeAttr?.getInitializer()?.getText().replace(/['"]/g, '');
     const roleValue = roleAttr?.getInitializer()?.getText().replace(/['"]/g, '');
@@ -29,7 +39,7 @@ export const preferShadcnSwitch: Rule = {
     ) {
       return {
         file: '', // Filled by engine
-        line: 0,  // Filled by engine
+        line: 0, // Filled by engine
         column: 0, // Filled by engine
         rule: 'prefer-shadcn-switch',
         violation: 'Custom switch detected. Use <Switch> from shadcn/ui.',

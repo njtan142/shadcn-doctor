@@ -1,6 +1,6 @@
 # Story 3.1: Form Control Detection Rules (Checkbox, Switch, RadioGroup)
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -24,39 +24,39 @@ so that all form control components are covered by the analysis and I get sugges
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create `prefer-shadcn-checkbox` rule (AC: 1, 4, 5)
-  - [ ] Create `src/rules/prefer-shadcn-checkbox.ts` following the exact same structure as existing rules
-  - [ ] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `input` (lowercase only)
-  - [ ] Check for `type="checkbox"` attribute
-  - [ ] Exclude if `role="switch"` is present (handled by switch rule)
-  - [ ] Return finding with: rule `prefer-shadcn-checkbox`, violation `"Raw <input type=\"checkbox\"> detected. Use <Checkbox> from shadcn/ui."`, suggestion `"Use <Checkbox> from shadcn/ui."`, element `input`, replacement `Checkbox`
+- [x] Task 1: Create `prefer-shadcn-checkbox` rule (AC: 1, 4, 5)
+  - [x] Create `src/rules/prefer-shadcn-checkbox.ts` following the exact same structure as existing rules
+  - [x] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `input` (lowercase only)
+  - [x] Check for `type="checkbox"` attribute
+  - [x] Exclude if `role="switch"` is present (handled by switch rule)
+  - [x] Return finding with: rule `prefer-shadcn-checkbox`, violation `"Raw <input type=\"checkbox\"> detected. Use <Checkbox> from shadcn/ui."`, suggestion `"Use <Checkbox> from shadcn/ui."`, element `input`, replacement `Checkbox`
 
-- [ ] Task 2: Create `prefer-shadcn-switch` rule (AC: 2, 4)
-  - [ ] Create `src/rules/prefer-shadcn-switch.ts` following the standard rule structure
-  - [ ] Detect `JsxOpeningElement` and `JsxSelfClosingElement` for `input` and `div` tags
-  - [ ] Match `input` with `type="checkbox"` AND `role="switch"`
-  - [ ] Match `div` with `role="switch"`
-  - [ ] Return finding with: rule `prefer-shadcn-switch`, violation `"Custom switch detected. Use <Switch> from shadcn/ui."`, suggestion `"Use <Switch> from shadcn/ui."`, element `input` or `div`, replacement `Switch`
+- [x] Task 2: Create `prefer-shadcn-switch` rule (AC: 2, 4)
+  - [x] Create `src/rules/prefer-shadcn-switch.ts` following the standard rule structure
+  - [x] Detect `JsxOpeningElement` and `JsxSelfClosingElement` for `input` and `div` tags
+  - [x] Match `input` with `type="checkbox"` AND `role="switch"`
+  - [x] Match `div` with `role="switch"`
+  - [x] Return finding with: rule `prefer-shadcn-switch`, violation `"Custom switch detected. Use <Switch> from shadcn/ui."`, suggestion `"Use <Switch> from shadcn/ui."`, element `input` or `div`, replacement `Switch`
 
-- [ ] Task 3: Create `prefer-shadcn-radio-group` rule (AC: 3, 4, 5)
-  - [ ] Create `src/rules/prefer-shadcn-radio-group.ts` following the standard rule structure
-  - [ ] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `input`
-  - [ ] Check for `type="radio"` attribute
-  - [ ] Return finding with: rule `prefer-shadcn-radio-group`, violation `"Raw <input type=\"radio\"> detected. Use <RadioGroup> from shadcn/ui."`, suggestion `"Use <RadioGroup> from shadcn/ui."`, element `input`, replacement `RadioGroup`
+- [x] Task 3: Create `prefer-shadcn-radio-group` rule (AC: 3, 4, 5)
+  - [x] Create `src/rules/prefer-shadcn-radio-group.ts` following the standard rule structure
+  - [x] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `input`
+  - [x] Check for `type="radio"` attribute
+  - [x] Return finding with: rule `prefer-shadcn-radio-group`, violation `"Raw <input type=\"radio\"> detected. Use <RadioGroup> from shadcn/ui."`, suggestion `"Use <RadioGroup> from shadcn/ui."`, element `input`, replacement `RadioGroup`
 
-- [ ] Task 4: Register rules in `src/rules/index.ts`
-  - [ ] Import all three new rules
-  - [ ] Add to `ALL_RULES` array
-  - [ ] Add named exports
+- [x] Task 4: Register rules in `src/rules/index.ts`
+  - [x] Import all three new rules
+  - [x] Add to `ALL_RULES` array
+  - [x] Add named exports
 
-- [ ] Task 5: Update fixtures (AC: 1, 2, 3, 4, 5)
-  - [ ] Add raw variants to `src/__fixtures__/raw-html-elements.tsx`
-  - [ ] Add shadcn/ui components to `src/__fixtures__/clean-component.tsx`
+- [x] Task 5: Update fixtures (AC: 1, 2, 3, 4, 5)
+  - [x] Add raw variants to `src/__fixtures__/raw-html-elements.tsx`
+  - [x] Add shadcn/ui components to `src/__fixtures__/clean-component.tsx`
 
-- [ ] Task 6: Write unit tests
-  - [ ] `src/rules/prefer-shadcn-checkbox.test.ts`
-  - [ ] `src/rules/prefer-shadcn-switch.test.ts`
-  - [ ] `src/rules/prefer-shadcn-radio-group.test.ts`
+- [x] Task 6: Write unit tests
+  - [x] `src/rules/prefer-shadcn-checkbox.test.ts`
+  - [x] `src/rules/prefer-shadcn-switch.test.ts`
+  - [x] `src/rules/prefer-shadcn-radio-group.test.ts`
 
 ## Dev Notes
 
@@ -71,9 +71,10 @@ so that all form control components are covered by the analysis and I get sugges
 
 To check attributes using `ts-morph`:
 ```typescript
-const attributes = node.getAttributes();
-const typeAttr = attributes.find(a => a.isKind(SyntaxKind.JsxAttribute) && a.getName() === 'type');
-const roleAttr = attributes.find(a => a.isKind(SyntaxKind.JsxAttribute) && a.getName() === 'role');
+const attributes = node.getAttributes()
+  .filter(a => a.isKind(SyntaxKind.JsxAttribute)) as JsxAttribute[];
+const typeAttr = attributes.find(a => a.getNameNode().getText() === 'type');
+const roleAttr = attributes.find(a => a.getNameNode().getText() === 'role');
 
 const typeValue = typeAttr?.getInitializer()?.getText().replace(/['"]/g, '');
 const roleValue = roleAttr?.getInitializer()?.getText().replace(/['"]/g, '');
@@ -108,10 +109,27 @@ Add these for no-op detection:
 
 ### Agent Model Used
 
-gemini-2.0-pro-exp
+minimax-2.5
 
 ### Debug Log References
 
+- Fixed attribute detection bug: `JsxAttribute` uses `getNameNode().getText()` not `getName()` to get attribute name
+- Updated test line numbers to match current fixture structure
+
 ### Completion Notes List
 
+- Fixed `prefer-shadcn-checkbox.ts`, `prefer-shadcn-switch.ts`, and `prefer-shadcn-radio-group.ts` to use correct ts-morph API: `a.getNameNode().getText()` instead of `a.getName()`
+- Updated test expectations for line numbers to match actual fixture:
+  - checkbox: line 10 → 12
+  - switch: lines 11,12 → 13,14
+  - radio-group: line 13 → 15
+- All 6 tests now passing (checkbox 2, switch 2, radio-group 2)
+
 ### File List
+
+- `src/rules/prefer-shadcn-checkbox.ts` (modified)
+- `src/rules/prefer-shadcn-switch.ts` (modified)
+- `src/rules/prefer-shadcn-radio-group.ts` (modified)
+- `src/rules/prefer-shadcn-checkbox.test.ts` (modified)
+- `src/rules/prefer-shadcn-switch.test.ts` (modified)
+- `src/rules/prefer-shadcn-radio-group.test.ts` (modified)

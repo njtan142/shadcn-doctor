@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { Project } from 'ts-morph';
-import { preferShadcnSwitch } from './prefer-shadcn-switch.js';
-import { runRules } from '../engine/rule-engine.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Project } from 'ts-morph';
+import { describe, expect, it } from 'vitest';
+import { runRules } from '../engine/rule-engine.js';
+import { preferShadcnSwitch } from './prefer-shadcn-switch.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixturesDir = path.resolve(__dirname, '../__fixtures__');
@@ -22,14 +22,14 @@ describe('prefer-shadcn-switch rule', () => {
       violation: 'Custom switch detected. Use <Switch> from shadcn/ui.',
       element: 'input',
       replacement: 'Switch',
-      line: 11,
+      line: 13,
     });
     expect(findings[1]).toMatchObject({
       rule: 'prefer-shadcn-switch',
       violation: 'Custom switch detected. Use <Switch> from shadcn/ui.',
       element: 'div',
       replacement: 'Switch',
-      line: 12,
+      line: 14,
     });
   });
 
