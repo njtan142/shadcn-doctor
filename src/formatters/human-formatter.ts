@@ -33,6 +33,9 @@ function formatFindingLine(finding: Finding): string {
  * - Green line with `+` prefix showing suggested line
  */
 function formatDiffLines(finding: Finding): [string, string] {
+  if (!finding.sourceLine || !finding.suggestedLine) {
+    return ['', ''];
+  }
   const redLine = red(`- ${finding.sourceLine}`);
   const greenLine = green(`+ ${finding.suggestedLine}`);
   return [redLine, greenLine];
@@ -79,7 +82,7 @@ export function formatHuman(result: AnalysisResult): string {
   }
 
   // Remove the last extra blank line before summary
-  if (parts[parts.length - 1] === '') {
+  if (parts.length > 0 && parts[parts.length - 1] === '') {
     parts.pop();
   }
 

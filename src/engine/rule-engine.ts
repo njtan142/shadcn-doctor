@@ -3,7 +3,7 @@ import type { Node, SourceFile, SyntaxKind } from 'ts-morph';
 import type { Finding, Rule, Warning } from '../types.js';
 
 function extractEventHandlers(sourceLine: string): string {
-  const eventHandlerRegex = /((?:on\w+)\s*=\s*\{[^}]+\})/g;
+  const eventHandlerRegex = /((?:on\w+)\s*=\s*\{(?:[^{}]|\{[^{}]*\})*\})/g;
   const handlers: string[] = [];
   let match;
   while ((match = eventHandlerRegex.exec(sourceLine)) !== null) {
@@ -13,11 +13,13 @@ function extractEventHandlers(sourceLine: string): string {
 }
 
 function generateSuggestedLine(replacement: string, sourceLine: string): string {
-  const handlers = extractEventHandlers(sourceLine);
-  if (handlers) {
-    return `<${replacement} ${handlers}>`;
+  const elementNameRegex = /^<(\w+)/;
+  const elementMatch = sourceLine.match(elementNameRegex);
+  if (!elementMatch) {
+    return `<${replacement}>`;
   }
-  return `<${replacement}>`;
+  const originalAttrs = sourceLine.slice(elementMatch[0].length);
+  return `<${replacement}${originalAttrs}>`;
 }
 
 export function runRules(
@@ -74,8 +76,10 @@ export function runRules(
             const fullText = sourceFile.getFullText();
             const pos = node.getStart();
             let lineStart = pos;
-            while (lineStart > 0 && fullText[lineStart - 1] !== '\n') {
-              lineStart--;
+            if (pos > 0) {
+              while (lineStart > 0 && fullText[lineStart - 1] !== '\n') {
+                lineStart--;
+              }
             }
             let lineEnd = pos;
             while (lineEnd < fullText.length && fullText[lineEnd] !== '\n') {
