@@ -57,6 +57,13 @@ so that I get actionable feedback on missed shadcn/ui adoption for the most comm
 - [Source: _bmad-output/planning-artifacts/architecture.md#Rule-Definition-Pattern]
 - [Source: _bmad-output/planning-artifacts/epics.md#Story-1.3]
 
+### Review Findings
+
+- [ ] [Review][Decision] `pass: true` on empty file discovery silently masks bad targetPath — When `discoverFiles` returns an empty array (wrong path, misconfigured directory), `analyze()` returns `pass: true` with only a warning in `warnings[]`. Callers checking only `pass` will silently succeed. Decide: should an empty scan be `pass: false` (treat as error), `pass: true` with warning (current behaviour), or throw? Cannot patch without knowing the intended contract.
+- [ ] [Review][Patch] `startsWith` path guard is not a proper path-prefix check [src/engine/rule-engine.ts:13]
+- [ ] [Review][Patch] Unguarded `throw` in `runRules` crashes `analyze()` instead of producing a warning — violates AC5 [src/engine/rule-engine.ts:13-15]
+- [ ] [Review][Patch] `console.log` left in production rule — pollutes stdout on every JSX element [src/rules/prefer-shadcn-button.ts:15]
+
 ## Dev Agent Record
 
 ### Agent Model Used
