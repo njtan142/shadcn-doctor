@@ -20,20 +20,20 @@ So that source code can be analyzed for shadcn/ui adoption issues.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Implement File Discovery Module (AC: 1, 2, 5)
-  - [ ] Implement scanner to take a single file or directory path.
-  - [ ] Use `fs.readdir({ recursive: true })` for directories.
-  - [ ] Filter out non-TypeScript files. Include only `.ts` and `.tsx`.
-  - [ ] Sort discovered files alphabetically to guarantee determinism.
-  - [ ] Normalize output paths using `path.posix` for cross-platform forward slashes and ensure they are relative to the scan root.
-- [ ] Task 2: Implement AST Parser Module (AC: 3, 4)
-  - [ ] Setup `ts-morph` project.
-  - [ ] Implement parsing logic for a single source file.
-  - [ ] Add try/catch error boundary for malformed files.
-  - [ ] Return a `Warning` payload if parsing fails instead of throwing.
-- [ ] Task 3: Unit Tests
-  - [ ] Write unit tests for file discovery (scanning a directory, single file, filtering).
-  - [ ] Write unit tests for AST parser (valid file, malformed file).
+- [x] Task 1: Implement File Discovery Module (AC: 1, 2, 5)
+  - [x] Implement scanner to take a single file or directory path.
+  - [x] Use `fs.readdir({ recursive: true })` for directories.
+  - [x] Filter out non-TypeScript files. Include only `.ts` and `.tsx`.
+  - [x] Sort discovered files alphabetically to guarantee determinism.
+  - [x] Normalize output paths using `path.posix` for cross-platform forward slashes and ensure they are relative to the scan root.
+- [x] Task 2: Implement AST Parser Module (AC: 3, 4)
+  - [x] Setup `ts-morph` project.
+  - [x] Implement parsing logic for a single source file.
+  - [x] Add try/catch error boundary for malformed files.
+  - [x] Return a `Warning` payload if parsing fails instead of throwing.
+- [x] Task 3: Unit Tests
+  - [x] Write unit tests for file discovery (scanning a directory, single file, filtering).
+  - [x] Write unit tests for AST parser (valid file, malformed file).
 
 ## Dev Notes
 
@@ -65,5 +65,17 @@ Gemini 2.5 Pro
 ### Completion Notes List
 
 - Ultimate context engine analysis completed - comprehensive developer guide created
+- Implemented file discovery using `fs.readdir` and path normalization.
+- Implemented AST parsing using `ts-morph` with error boundaries.
+- Created unit tests for scanner and parser.
+- Fixed linting, formatting and tests to ensure no regressions and all acceptance criteria met.
 
 ### File List
+
+- src/scanner/index.ts
+- src/scanner/scanner.ts
+- src/scanner/scanner.test.ts
+- src/parser/index.ts
+- src/parser/parser.ts
+- src/parser/parser.test.ts
+

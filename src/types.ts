@@ -8,7 +8,7 @@ export type Finding = {
 export type Rule = {
   id: string;
   description: string;
-  check: (node: any) => Finding[];
+  check: (node: unknown) => Finding[];
 };
 
 export type AnalysisResult = {
