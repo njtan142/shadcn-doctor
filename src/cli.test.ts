@@ -125,11 +125,58 @@ describe('CLI run() function', () => {
       expect(process.exitCode).not.toBe(2);
     });
 
-    it('accepts "json" format without fatal error (outputs human format as stub for Epic 2)', async () => {
+    it('accepts "json" format without fatal error', async () => {
       const filePath = path.join(fixturesDir, 'raw-html-elements.tsx');
       await run(filePath, 'json');
       // Format is accepted; no fatal error (exit code not 2)
       expect(process.exitCode).not.toBe(2);
+    });
+  });
+
+  describe('JSON format integration (AC: 1, 2, 5)', () => {
+    it('run(fixturesDir, "json") produces parseable JSON stdout with pass: false when violations exist', async () => {
+      const rawHtmlFile = path.join(fixturesDir, 'raw-html-elements.tsx');
+      await run(rawHtmlFile, 'json');
+
+      const calls = (stdoutSpy.mock.calls as unknown[][]).flat().map(String);
+      const stdout = calls.join('');
+
+      // Must be parseable JSON
+      const parsed = JSON.parse(stdout);
+
+      // raw-html-elements.tsx has violations → pass should be false
+      expect(parsed.pass).toBe(false);
+      expect(typeof parsed.summary.total).toBe('number');
+      expect(typeof parsed.summary.filesScanned).toBe('number');
+      expect(Array.isArray(parsed.findings)).toBe(true);
+      expect(Array.isArray(parsed.warnings)).toBe(true);
+      expect(parsed.findings.length).toBeGreaterThan(0);
+    });
+
+    it('run(fixturesDir, "json") with clean component produces parseable JSON with pass: true', async () => {
+      const cleanFile = path.join(fixturesDir, 'clean-component.tsx');
+      await run(cleanFile, 'json');
+
+      const calls = (stdoutSpy.mock.calls as unknown[][]).flat().map(String);
+      const stdout = calls.join('');
+
+      // Must be parseable JSON
+      const parsed = JSON.parse(stdout);
+
+      // clean-component.tsx has no violations → pass should be true
+      expect(parsed.pass).toBe(true);
+      expect(parsed.findings).toEqual([]);
+      expect(Array.isArray(parsed.warnings)).toBe(true);
+    });
+
+    it('run(fixturesDir, "human") produces output that is NOT JSON (does not start with "{")', async () => {
+      const rawHtmlFile = path.join(fixturesDir, 'raw-html-elements.tsx');
+      await run(rawHtmlFile, 'human');
+
+      const calls = (stdoutSpy.mock.calls as unknown[][]).flat().map(String);
+      const stdout = calls.join('');
+
+      expect(stdout.trimStart().startsWith('{')).toBe(false);
     });
   });
 });

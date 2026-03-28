@@ -3,11 +3,12 @@ import { fileURLToPath } from 'node:url';
 import { Command, Option } from 'commander';
 import { analyze } from './analyzer.js';
 import { formatHuman } from './formatters/human-formatter.js';
+import { formatJson } from './formatters/json-formatter.js';
 
 const require = createRequire(import.meta.url);
 const { version } = require('../package.json') as { version: string };
 
-export async function run(targetPath = '.', _format = 'human') {
+export async function run(targetPath = '.', format = 'human') {
   try {
     const result = await analyze(targetPath);
 
@@ -17,8 +18,11 @@ export async function run(targetPath = '.', _format = 'human') {
     }
 
     // Findings output to stdout
-    // format is stored for future Epic 2 JSON formatter; currently always human
-    process.stdout.write(formatHuman(result));
+    if (format === 'json') {
+      process.stdout.write(formatJson(result));
+    } else {
+      process.stdout.write(formatHuman(result));
+    }
 
     // Exit code: 0 = pass, 1 = findings found
     process.exitCode = result.pass ? 0 : 1;

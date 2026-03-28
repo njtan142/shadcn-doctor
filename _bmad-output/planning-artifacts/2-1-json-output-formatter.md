@@ -1,6 +1,6 @@
 # Story 2.1: JSON Output Formatter
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -26,36 +26,36 @@ so that my AI coding agent can parse findings programmatically and apply fixes w
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create `src/formatters/json-formatter.ts` (AC: 1, 2, 3)
-  - [ ] Implement `formatJson(result: AnalysisResult): string` as a named export
-  - [ ] Return `JSON.stringify(output, null, 2)` where `output` matches the architecture schema exactly
-  - [ ] Map `result.warnings` (array of `Warning` objects) to an array of plain strings via `warning.message`
-  - [ ] Never import or call `colors.ts` — JSON formatter must be color-free by design
-  - [ ] Write unit tests in `src/formatters/json-formatter.test.ts`
+- [x] Task 1: Create `src/formatters/json-formatter.ts` (AC: 1, 2, 3)
+  - [x] Implement `formatJson(result: AnalysisResult): string` as a named export
+  - [x] Return `JSON.stringify(output, null, 2)` where `output` matches the architecture schema exactly
+  - [x] Map `result.warnings` (array of `Warning` objects) to an array of plain strings via `warning.message`
+  - [x] Never import or call `colors.ts` — JSON formatter must be color-free by design
+  - [x] Write unit tests in `src/formatters/json-formatter.test.ts`
 
-- [ ] Task 2: Update `src/formatters/index.ts` barrel (AC: 1)
-  - [ ] Add `export * from './json-formatter.js'` so `formatJson` is importable via the barrel
+- [x] Task 2: Update `src/formatters/index.ts` barrel (AC: 1)
+  - [x] Add `export * from './json-formatter.js'` so `formatJson` is importable via the barrel
 
-- [ ] Task 3: Wire `--format json` into `src/cli.ts` (AC: 1, 2, 3, 4, 5, 6)
-  - [ ] Import `formatJson` from `./formatters/json-formatter.js`
-  - [ ] In `run(targetPath, format)`, branch on `format`:
+- [x] Task 3: Wire `--format json` into `src/cli.ts` (AC: 1, 2, 3, 4, 5, 6)
+  - [x] Import `formatJson` from `./formatters/json-formatter.js`
+  - [x] In `run(targetPath, format)`, branch on `format`:
     - `'json'` → call `formatJson(result)`, write to stdout, write warnings to stderr
     - `'human'` (default) → existing `formatHuman(result)` path unchanged
-  - [ ] Rename `_format` parameter to `format` (the `_` prefix stub is no longer needed)
-  - [ ] Confirm `.choices(['human', 'json'])` is already enforced in `createProgram()` — invalid values handled by Commander at parse time with exit code 2 (already implemented in Story 1.6)
+  - [x] Rename `_format` parameter to `format` (the `_` prefix stub is no longer needed)
+  - [x] Confirm `.choices(['human', 'json'])` is already enforced in `createProgram()` — invalid values handled by Commander at parse time with exit code 2 (already implemented in Story 1.6)
 
-- [ ] Task 4: Write unit tests for `json-formatter.ts` (AC: 1, 2, 3, 4)
-  - [ ] Test: findings present → valid JSON string, `pass: false`, correct summary counts, all finding fields present
-  - [ ] Test: no findings → valid JSON string, `pass: true`, `total: 0`, `findings: []`, `warnings: []`
-  - [ ] Test: warnings in result → `warnings` array contains string messages (not objects)
-  - [ ] Test: output contains no ANSI escape sequences (search for `\x1b[` or `String.fromCharCode(27)` pattern)
-  - [ ] Test: JSON is parseable (verify `JSON.parse(formatJson(result))` does not throw)
-  - [ ] Test: all Finding fields appear in each findings entry (`file`, `line`, `column`, `rule`, `violation`, `suggestion`, `element`, `replacement`)
+- [x] Task 4: Write unit tests for `json-formatter.ts` (AC: 1, 2, 3, 4)
+  - [x] Test: findings present → valid JSON string, `pass: false`, correct summary counts, all finding fields present
+  - [x] Test: no findings → valid JSON string, `pass: true`, `total: 0`, `findings: []`, `warnings: []`
+  - [x] Test: warnings in result → `warnings` array contains string messages (not objects)
+  - [x] Test: output contains no ANSI escape sequences (search for `\x1b[` or `String.fromCharCode(27)` pattern)
+  - [x] Test: JSON is parseable (verify `JSON.parse(formatJson(result))` does not throw)
+  - [x] Test: all Finding fields appear in each findings entry (`file`, `line`, `column`, `rule`, `violation`, `suggestion`, `element`, `replacement`)
 
-- [ ] Task 5: Write integration tests for `--format json` CLI path (AC: 1, 2, 5)
-  - [ ] Test: `run(fixturesDir, 'json')` → stdout JSON parseable and `pass` matches whether violations exist
-  - [ ] Test: `run(fixturesDir, 'human')` → stdout is NOT JSON (verify does not start with `{`)
-  - [ ] Use existing fixture files: `src/__fixtures__/raw-html-elements.tsx` (violations) and `src/__fixtures__/clean-component.tsx` (no violations)
+- [x] Task 5: Write integration tests for `--format json` CLI path (AC: 1, 2, 5)
+  - [x] Test: `run(fixturesDir, 'json')` → stdout JSON parseable and `pass` matches whether violations exist
+  - [x] Test: `run(fixturesDir, 'human')` → stdout is NOT JSON (verify does not start with `{`)
+  - [x] Use existing fixture files: `src/__fixtures__/raw-html-elements.tsx` (violations) and `src/__fixtures__/clean-component.tsx` (no violations)
 
 ## Dev Notes
 
@@ -314,6 +314,30 @@ claude-sonnet-4-6
 
 ### Debug Log References
 
+None.
+
 ### Completion Notes List
 
+- Implemented `formatJson(result: AnalysisResult): string` in `src/formatters/json-formatter.ts` — pure, stateless, color-free JSON serializer matching exact architecture schema.
+- `warnings` mapped from `Warning[]` (objects) to `string[]` via `.map((w) => w.message)`.
+- No import of `colors.ts` or picocolors — architectural boundary upheld.
+- Updated `src/formatters/index.ts` barrel to re-export `formatJson`.
+- Updated `src/cli.ts`: renamed `_format` → `format`, imported `formatJson`, added `format === 'json'` branch. Warnings still always go to stderr regardless of format (both paths).
+- `--format` validation (exit code 2 for invalid values) confirmed already implemented in `createProgram()` via Commander `.choices(['human', 'json'])`.
+- 8 unit tests added in `src/formatters/json-formatter.test.ts` covering all AC 1–4 scenarios.
+- 3 integration tests added in `src/cli.test.ts` covering AC 1, 2, 5.
+- All 11 new tests pass. Pre-existing 2 failures in `rule-engine.test.ts` are unrelated deferred issues (path guard on Windows).
+- Biome lint/format checks pass on all modified files.
+
 ### File List
+
+- `src/formatters/json-formatter.ts` (created)
+- `src/formatters/json-formatter.test.ts` (created)
+- `src/formatters/index.ts` (modified)
+- `src/cli.ts` (modified)
+- `src/cli.test.ts` (modified)
+- `_bmad-output/planning-artifacts/2-1-json-output-formatter.md` (story file — status/tasks/record updated)
+
+### Change Log
+
+- 2026-03-29: Implemented Story 2.1 — JSON Output Formatter. Created `json-formatter.ts` and its tests, updated barrel export, wired `--format json` into CLI. 11 new tests added, all passing.
