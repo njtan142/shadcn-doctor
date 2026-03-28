@@ -10,9 +10,11 @@ export function runRules(
   const findings: Finding[] = [];
   const warnings: Warning[] = [];
 
-  const normalizedRoot = rootPath.endsWith(path.sep) ? rootPath : rootPath + path.sep;
+  const normalizedRootForward = rootPath.split(path.sep).join('/');
+  const normalizedRoot = normalizedRootForward.endsWith('/') ? normalizedRootForward : normalizedRootForward + '/';
   const absoluteFilePath = sourceFile.getFilePath();
-  if (!absoluteFilePath.startsWith(normalizedRoot) && absoluteFilePath !== rootPath) {
+  const normalizedFilePath = absoluteFilePath.split(path.sep).join('/');
+  if (!normalizedFilePath.startsWith(normalizedRoot) && normalizedFilePath !== normalizedRootForward) {
     const warning: Warning = {
       message: `File "${absoluteFilePath}" is outside rootPath "${rootPath}" — skipped`,
     };

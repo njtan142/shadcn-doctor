@@ -1,6 +1,6 @@
 # Story 1.5: Input, Textarea, and Select Detection Rules
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -26,45 +26,45 @@ so that the four most commonly misused form elements are covered by the analysis
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create `prefer-shadcn-input` rule (AC: 1, 4, 5)
-  - [ ] Create `src/rules/prefer-shadcn-input.ts` following the exact same structure as `prefer-shadcn-button.ts`
-  - [ ] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `input` (case-sensitive, lowercase only)
-  - [ ] Return finding with: rule `prefer-shadcn-input`, violation `"Raw <input> detected. Use <Input> from shadcn/ui."`, suggestion `"Use <Input> from shadcn/ui."`, element `input`, replacement `Input`
-  - [ ] Use `.trim()` on tag name (matches existing pattern in prefer-shadcn-button.ts)
-  - [ ] Leave `file`, `line`, `column` as empty/0 — engine fills these in
+- [x] Task 1: Create `prefer-shadcn-input` rule (AC: 1, 4, 5)
+  - [x] Create `src/rules/prefer-shadcn-input.ts` following the exact same structure as `prefer-shadcn-button.ts`
+  - [x] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `input` (case-sensitive, lowercase only)
+  - [x] Return finding with: rule `prefer-shadcn-input`, violation `"Raw <input> detected. Use <Input> from shadcn/ui."`, suggestion `"Use <Input> from shadcn/ui."`, element `input`, replacement `Input`
+  - [x] Use `.trim()` on tag name (matches existing pattern in prefer-shadcn-button.ts)
+  - [x] Leave `file`, `line`, `column` as empty/0 — engine fills these in
 
-- [ ] Task 2: Create `prefer-shadcn-textarea` rule (AC: 2, 4, 5)
-  - [ ] Create `src/rules/prefer-shadcn-textarea.ts` following the same structure
-  - [ ] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `textarea`
-  - [ ] Return finding with: rule `prefer-shadcn-textarea`, violation `"Raw <textarea> detected. Use <Textarea> from shadcn/ui."`, suggestion `"Use <Textarea> from shadcn/ui."`, element `textarea`, replacement `Textarea`
+- [x] Task 2: Create `prefer-shadcn-textarea` rule (AC: 2, 4, 5)
+  - [x] Create `src/rules/prefer-shadcn-textarea.ts` following the same structure
+  - [x] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `textarea`
+  - [x] Return finding with: rule `prefer-shadcn-textarea`, violation `"Raw <textarea> detected. Use <Textarea> from shadcn/ui."`, suggestion `"Use <Textarea> from shadcn/ui."`, element `textarea`, replacement `Textarea`
 
-- [ ] Task 3: Create `prefer-shadcn-select` rule (AC: 3, 4, 5)
-  - [ ] Create `src/rules/prefer-shadcn-select.ts` following the same structure
-  - [ ] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `select`
-  - [ ] Return finding with: rule `prefer-shadcn-select`, violation `"Raw <select> detected. Use <Select> from shadcn/ui."`, suggestion `"Use <Select> from shadcn/ui."`, element `select`, replacement `Select`
+- [x] Task 3: Create `prefer-shadcn-select` rule (AC: 3, 4, 5)
+  - [x] Create `src/rules/prefer-shadcn-select.ts` following the same structure
+  - [x] Detect `JsxOpeningElement` and `JsxSelfClosingElement` with tag name `select`
+  - [x] Return finding with: rule `prefer-shadcn-select`, violation `"Raw <select> detected. Use <Select> from shadcn/ui."`, suggestion `"Use <Select> from shadcn/ui."`, element `select`, replacement `Select`
 
-- [ ] Task 4: Register all three new rules in `src/rules/index.ts` (AC: 6)
-  - [ ] Import `preferShadcnInput`, `preferShadcnTextarea`, `preferShadcnSelect`
-  - [ ] Add all three to the `ALL_RULES` array (after `preferShadcnButton`)
-  - [ ] Add named exports for each new rule
+- [x] Task 4: Register all three new rules in `src/rules/index.ts` (AC: 6)
+  - [x] Import `preferShadcnInput`, `preferShadcnTextarea`, `preferShadcnSelect`
+  - [x] Add all three to the `ALL_RULES` array (after `preferShadcnButton`)
+  - [x] Add named exports for each new rule
 
-- [ ] Task 5: Update fixture files (AC: 1, 2, 3, 4, 5, 6)
-  - [ ] Update `src/__fixtures__/raw-html-elements.tsx` to include raw `<input>`, `<textarea>`, and `<select>` elements
-  - [ ] Update `src/__fixtures__/clean-component.tsx` to include shadcn/ui `<Input>`, `<Textarea>`, and `<Select>` components
-  - [ ] Ensure fixture elements are on distinct lines for deterministic line-number assertions in tests
+- [x] Task 5: Update fixture files (AC: 1, 2, 3, 4, 5, 6)
+  - [x] Update `src/__fixtures__/raw-html-elements.tsx` to include raw `<input>`, `<textarea>`, and `<select>` elements
+  - [x] Update `src/__fixtures__/clean-component.tsx` to include shadcn/ui `<Input>`, `<Textarea>`, and `<Select>` components
+  - [x] Ensure fixture elements are on distinct lines for deterministic line-number assertions in tests
 
-- [ ] Task 6: Write unit tests for each new rule (AC: 1, 2, 3, 4, 5, 6)
-  - [ ] Create `src/rules/prefer-shadcn-input.test.ts`
-    - [ ] Test: detects raw `<input>` (self-closing) — assert finding count, rule ID, violation, element, replacement, line
-    - [ ] Test: detects raw `<input>` (opening element variant if applicable)
-    - [ ] Test: does NOT flag `<Input>` shadcn/ui component
-  - [ ] Create `src/rules/prefer-shadcn-textarea.test.ts`
-    - [ ] Test: detects raw `<textarea>` (opening+closing) — assert finding count, rule ID, violation, element, replacement, line
-    - [ ] Test: does NOT flag `<Textarea>` shadcn/ui component
-  - [ ] Create `src/rules/prefer-shadcn-select.test.ts`
-    - [ ] Test: detects raw `<select>` (opening+closing) — assert finding count, rule ID, violation, element, replacement, line
-    - [ ] Test: does NOT flag `<Select>` shadcn/ui component
-  - [ ] Create or update an integration test that verifies all four rules fire correctly when a file contains all four raw elements in line-number order (AC: 6)
+- [x] Task 6: Write unit tests for each new rule (AC: 1, 2, 3, 4, 5, 6)
+  - [x] Create `src/rules/prefer-shadcn-input.test.ts`
+    - [x] Test: detects raw `<input>` (self-closing) — assert finding count, rule ID, violation, element, replacement, line
+    - [x] Test: detects raw `<input>` (opening element variant if applicable)
+    - [x] Test: does NOT flag `<Input>` shadcn/ui component
+  - [x] Create `src/rules/prefer-shadcn-textarea.test.ts`
+    - [x] Test: detects raw `<textarea>` (opening+closing) — assert finding count, rule ID, violation, element, replacement, line
+    - [x] Test: does NOT flag `<Textarea>` shadcn/ui component
+  - [x] Create `src/rules/prefer-shadcn-select.test.ts`
+    - [x] Test: detects raw `<select>` (opening+closing) — assert finding count, rule ID, violation, element, replacement, line
+    - [x] Test: does NOT flag `<Select>` shadcn/ui component
+  - [x] Create or update an integration test that verifies all four rules fire correctly when a file contains all four raw elements in line-number order (AC: 6)
 
 ## Dev Notes
 
@@ -299,6 +299,33 @@ claude-sonnet-4-6
 
 ### Debug Log References
 
+None.
+
 ### Completion Notes List
 
+- Created three new detection rules following the exact `prefer-shadcn-button.ts` pattern: `prefer-shadcn-input`, `prefer-shadcn-textarea`, `prefer-shadcn-select`
+- All rules use case-sensitive lowercase tag matching and `.trim()` to prevent false positives/negatives
+- Registered all three new rules in `src/rules/index.ts` `ALL_RULES` array with named exports
+- Extended `src/__fixtures__/raw-html-elements.tsx` with `<input />`, `<textarea></textarea>`, `<select></select>` on lines 7–9 for deterministic line assertions
+- Extended `src/__fixtures__/clean-component.tsx` with shadcn/ui `<Input>`, `<Textarea>`, `<Select>` — no false positives
+- Created 3 unit test files (2 tests each: detection + false positive check) and 1 integration test file (3 tests: AC6 four-finding check, fixture-based check, clean check)
+- Fixed pre-existing Windows path normalization bug in `src/engine/rule-engine.ts`: `startsWith` comparison now normalizes backslashes to forward slashes before comparing, resolving test failures on Windows where ts-morph returns forward-slash paths but Node `path.resolve` returns backslash paths
+- All 37 new and existing tests pass; 2 pre-existing failures in `rule-engine.test.ts` (using `rootPath = '/'`) were present before this story
+
 ### File List
+
+- src/rules/prefer-shadcn-input.ts (created)
+- src/rules/prefer-shadcn-textarea.ts (created)
+- src/rules/prefer-shadcn-select.ts (created)
+- src/rules/prefer-shadcn-input.test.ts (created)
+- src/rules/prefer-shadcn-textarea.test.ts (created)
+- src/rules/prefer-shadcn-select.test.ts (created)
+- src/rules/all-rules-integration.test.ts (created)
+- src/rules/index.ts (modified)
+- src/__fixtures__/raw-html-elements.tsx (modified)
+- src/__fixtures__/clean-component.tsx (modified)
+- src/engine/rule-engine.ts (modified — Windows path normalization fix)
+
+## Change Log
+
+- 2026-03-29: Implemented story 1.5 — created input, textarea, and select detection rules; registered in ALL_RULES; updated fixtures; wrote unit and integration tests; fixed Windows path normalization bug in rule-engine.ts (Date: 2026-03-29)
