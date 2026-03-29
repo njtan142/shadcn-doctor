@@ -43,15 +43,15 @@ story_location: "{project-root}/_bmad-output/implementation-artifacts"
 
 development_status:
   epic-1: in-progress
-  1-1-project-initialization-cli-skeleton: review
+  1-1-project-initialization-cli-skeleton: done
   1-2-file-discovery-ast-parsing: review
   1-3-rule-engine-button-detection: done
-  1-4-human-readable-output-formatter: ready-for-dev
+  1-4-human-readable-output-formatter: done
   1-5-input-textarea-and-select-detection-rules: done
   1-6-cli-argument-handling-error-cases: done
   epic-2-retrospective: optional
   epic-2: in-progress
-  2-1-json-output-formatter: ready-for-dev
+  2-1-json-output-formatter: done
   2-2-ai-agent-loop-validation: done
   epic-3: in-progress
   3-1-form-control-detection-rules-checkbox-switch-radiogroup: done
