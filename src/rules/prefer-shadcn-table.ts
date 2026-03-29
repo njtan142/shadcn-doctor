@@ -1,4 +1,9 @@
-import { SyntaxKind, type Node, type JsxOpeningElement, type JsxSelfClosingElement } from 'ts-morph';
+import {
+  type JsxOpeningElement,
+  type JsxSelfClosingElement,
+  type Node,
+  SyntaxKind,
+} from 'ts-morph';
 import type { Finding, Rule } from '../types.js';
 
 export const preferShadcnTable: Rule = {
@@ -16,7 +21,7 @@ export const preferShadcnTable: Rule = {
     if (tagName === 'table') {
       return {
         file: '', // Filled by engine
-        line: 0,  // Filled by engine
+        line: 0, // Filled by engine
         column: 0, // Filled by engine
         rule: 'prefer-shadcn-table',
         violation: 'Raw <table> detected. Use <Table> from shadcn/ui.',

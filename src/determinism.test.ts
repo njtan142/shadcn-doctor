@@ -29,7 +29,7 @@ describe('Story 2.2: AI Agent Loop Validation & Determinism', () => {
     const file1 = path.join(tempDir, 'b.tsx');
     const file2 = path.join(tempDir, 'a.tsx');
     const content = 'export const App = () => <div><button>Click</button><input /></div>;';
-    
+
     await fs.writeFile(file1, content);
     await fs.writeFile(file2, content);
 
@@ -43,7 +43,7 @@ describe('Story 2.2: AI Agent Loop Validation & Determinism', () => {
     const stdout2 = (stdoutSpy.mock.calls as unknown[][]).flat().map(String).join('');
 
     expect(stdout1).toBe(stdout2);
-    
+
     const parsed = JSON.parse(stdout1);
     // Files should be sorted: a.tsx then b.tsx
     expect(parsed.findings[0].file).toBe('a.tsx');
@@ -91,9 +91,9 @@ describe('Story 2.2: AI Agent Loop Validation & Determinism', () => {
 
   it('AC 4: Fatal error handling in JSON mode - stdout is empty, exit code 2', async () => {
     const nonExistentPath = path.join(tempDir, 'ghost');
-    
+
     await run(nonExistentPath, 'json');
-    
+
     const stdout = (stdoutSpy.mock.calls as unknown[][]).flat().map(String).join('');
     const stderr = (stderrSpy.mock.calls as unknown[][]).flat().map(String).join('');
 

@@ -5,6 +5,7 @@ import { parseFile } from './parser/parser.js';
 import { ALL_RULES } from './rules/index.js';
 import { discoverFiles } from './scanner/scanner.js';
 import type { AnalysisResult, Finding, Warning } from './types.js';
+import { validateGenuineComponents } from './validator/genuine.js';
 
 export interface AnalyzeOptions {
   bail?: boolean;
@@ -33,7 +34,19 @@ export async function analyze(
     throw err;
   }
 
-  console.error(`\u26a1 Scanning ${absoluteRootPath}...`);
+  const fakeComponents = await validateGenuineComponents(absoluteRootPath);
+  if (fakeComponents.length > 0) {
+    console.error(
+      '⚠️ Warning: The following components in your ui directory do not appear to be genuine shadcn/ui installations:',
+    );
+    for (const comp of fakeComponents) {
+      console.error(`  - ${comp} (Missing standard shadcn imports/structure)`);
+    }
+    console.error(''); // empty line
+  }
+
+  console.error(`⚡ Scanning ${absoluteRootPath}...`);
+
   const files = await discoverFiles(absoluteRootPath);
   console.error(`Found ${files.length} TypeScript files\n`);
 

@@ -1,4 +1,9 @@
-import { SyntaxKind, type Node, type JsxOpeningElement, type JsxSelfClosingElement } from 'ts-morph';
+import {
+  type JsxOpeningElement,
+  type JsxSelfClosingElement,
+  type Node,
+  SyntaxKind,
+} from 'ts-morph';
 import type { Finding, Rule } from '../types.js';
 
 export const preferShadcnSelect: Rule = {
@@ -15,7 +20,7 @@ export const preferShadcnSelect: Rule = {
     if (tagName === 'select') {
       return {
         file: '', // Filled by engine
-        line: 0,  // Filled by engine
+        line: 0, // Filled by engine
         column: 0, // Filled by engine
         rule: 'prefer-shadcn-select',
         violation: 'Raw <select> detected. Use <Select> from shadcn/ui.',
