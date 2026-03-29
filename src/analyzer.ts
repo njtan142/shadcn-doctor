@@ -8,6 +8,16 @@ import type { AnalysisResult, Finding, Warning } from './types.js';
 
 export async function analyze(targetPath: string): Promise<AnalysisResult> {
   const absoluteRootPath = path.resolve(targetPath);
+
+  try {
+    await fs.stat(targetPath);
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+      throw new Error(`Path not found: ${targetPath}`);
+    }
+    throw err;
+  }
+
   const files = await discoverFiles(absoluteRootPath);
 
   if (files.length === 0) {
