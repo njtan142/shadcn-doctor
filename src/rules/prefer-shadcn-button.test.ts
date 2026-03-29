@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { Project } from 'ts-morph';
-import { preferShadcnButton } from './prefer-shadcn-button.js';
-import { runRules } from '../engine/rule-engine.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Project } from 'ts-morph';
+import { describe, expect, it } from 'vitest';
+import { runRules } from '../engine/rule-engine.js';
+import { preferShadcnButton } from './prefer-shadcn-button.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixturesDir = path.resolve(__dirname, '../__fixtures__');
@@ -16,7 +16,7 @@ describe('prefer-shadcn-button rule', () => {
     const sourceFile = project.addSourceFileAtPath(filePath);
     const { findings } = runRules(sourceFile, [preferShadcnButton], fixturesDir);
 
-    expect(findings).toHaveLength(3);
+    expect(findings).toHaveLength(7);
     expect(findings[0]).toMatchObject({
       rule: 'prefer-shadcn-button',
       violation: 'Raw <button> detected. Use <Button> from shadcn/ui.',
@@ -28,7 +28,7 @@ describe('prefer-shadcn-button rule', () => {
       line: 5,
     });
     expect(findings[2]).toMatchObject({
-      line: 6,
+      line: 8,
     });
   });
 

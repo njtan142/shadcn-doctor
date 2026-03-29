@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { Project } from 'ts-morph';
-import { preferShadcnTextarea } from './prefer-shadcn-textarea.js';
-import { runRules } from '../engine/rule-engine.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Project } from 'ts-morph';
+import { describe, expect, it } from 'vitest';
+import { runRules } from '../engine/rule-engine.js';
+import { preferShadcnTextarea } from './prefer-shadcn-textarea.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixturesDir = path.resolve(__dirname, '../__fixtures__');
@@ -22,7 +22,7 @@ describe('prefer-shadcn-textarea rule', () => {
       violation: 'Raw <textarea> detected. Use <Textarea> from shadcn/ui.',
       element: 'textarea',
       replacement: 'Textarea',
-      line: 8,
+      line: 10,
     });
   });
 

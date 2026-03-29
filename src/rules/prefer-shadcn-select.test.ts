@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import { Project } from 'ts-morph';
-import { preferShadcnSelect } from './prefer-shadcn-select.js';
-import { runRules } from '../engine/rule-engine.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Project } from 'ts-morph';
+import { describe, expect, it } from 'vitest';
+import { runRules } from '../engine/rule-engine.js';
+import { preferShadcnSelect } from './prefer-shadcn-select.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixturesDir = path.resolve(__dirname, '../__fixtures__');
@@ -22,7 +22,7 @@ describe('prefer-shadcn-select rule', () => {
       violation: 'Raw <select> detected. Use <Select> from shadcn/ui.',
       element: 'select',
       replacement: 'Select',
-      line: 9,
+      line: 11,
     });
   });
 
