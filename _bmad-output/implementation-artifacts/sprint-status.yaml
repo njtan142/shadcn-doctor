@@ -48,7 +48,7 @@ development_status:
   1-3-rule-engine-button-detection: ready-for-dev
   1-4-human-readable-output-formatter: ready-for-dev
   1-5-input-textarea-and-select-detection-rules: done
-  1-6-cli-argument-handling-error-cases: in-progress
+  1-6-cli-argument-handling-error-cases: done
   epic-2-retrospective: optional
   epic-2: in-progress
   2-1-json-output-formatter: ready-for-dev

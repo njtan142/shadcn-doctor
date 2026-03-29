@@ -13,22 +13,17 @@ export async function analyze(targetPath: string): Promise<AnalysisResult> {
     throw new Error('Path cannot be empty');
   }
 
-  let stats: ReturnType<typeof fs.stat> extends Promise<infer T> ? T : never;
   try {
-    stats = await fs.stat(absoluteRootPath);
+    await fs.stat(absoluteRootPath);
   } catch (err) {
     const code = (err as NodeJS.ErrnoException).code;
     if (code === 'ENOENT') {
-      throw new Error(`Path not found: ${absoluteRootPath}`);
+      throw new Error(`Path not found: ${targetPath}`);
     }
     if (code === 'EACCES') {
-      throw new Error(`Permission denied: ${absoluteRootPath}`);
+      throw new Error(`Permission denied: ${targetPath}`);
     }
     throw err;
-  }
-
-  if (!stats.isDirectory()) {
-    throw new Error(`Path is not a directory: ${absoluteRootPath}`);
   }
 
   const files = await discoverFiles(absoluteRootPath);

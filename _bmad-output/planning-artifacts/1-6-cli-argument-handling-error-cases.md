@@ -1,6 +1,6 @@
 # Story 1.6: CLI Argument Handling & Error Cases
 
-Status: in-progress
+Status: done
 
 ## Story
 
@@ -288,3 +288,8 @@ None.
 - [x] [Review][Defer] Single non-TS file (e.g. `.js`) produces "No TypeScript files found" instead of a file-type mismatch message [src/analyzer.ts:20-22] — deferred, pre-existing `discoverFiles` behavior unchanged by this story
 - [x] [Review][Defer] TOCTOU race: `analyzer.ts` stat and `discoverFiles` stat are not atomic — path could vanish between them [src/analyzer.ts:12, src/scanner/scanner.ts:8] — deferred, pre-existing architecture concern
 - [x] [Review][Defer] All-warnings scan path: if every file returns a parse Warning, `filesScanned=0` and `pass:true` — edge case untested [src/analyzer.ts:28-41] — deferred, pre-existing behavior not changed by this story
+
+### Review Findings (from commit d822e881 — "fix: address code review findings for story 1-6")
+
+- [x] [Review][Patch] Error messages use `absoluteRootPath` instead of `targetPath` — AC #4 requires `Error: Path not found: ./nonexistent` with user-provided path, but lines 22, 25, 31 use `${absoluteRootPath}` (resolved path). [src/analyzer.ts:22,25,31]
+- [x] [Review][Patch] `isDirectory()` check breaks AC #2 single-file scanning — lines 30-31 throw if path is not a directory, but AC #2 expects `npx shadcn-doctor ./src/page.tsx` to scan only that single file. [src/analyzer.ts:30-31]
