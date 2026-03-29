@@ -28,19 +28,23 @@ export async function analyze(targetPath: string): Promise<AnalysisResult> {
 
   console.error(`\u26a1 Scanning ${absoluteRootPath}...`);
   const files = await discoverFiles(absoluteRootPath);
-  console.error(`Found ${files.length} TypeScript files`);
+  console.error(`Found ${files.length} TypeScript files\n`);
 
   if (files.length === 0) {
     throw new Error(`No TypeScript files found in: ${targetPath}`);
   }
 
-  console.error(`Analyzing...`);
-
+  let lastDir = '';
   const allFindings: Finding[] = [];
   const allWarnings: Warning[] = [];
   let filesScanned = 0;
 
   for (const file of files) {
+    const dir = path.dirname(file);
+    if (dir !== lastDir) {
+      console.error(`  \u2192 ${dir}`);
+      lastDir = dir;
+    }
     const sourceFileOrWarning = parseFile(file);
 
     if ('message' in sourceFileOrWarning) {
