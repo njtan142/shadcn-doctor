@@ -55,10 +55,10 @@ development_status:
   2-2-ai-agent-loop-validation: done
   epic-3: in-progress
   3-1-form-control-detection-rules-checkbox-switch-radiogroup: done
-  3-2-layout-feedback-component-detection-rules: in-progress
-  3-3-custom-css-styled-implementation-detection: ready-for-dev
+  3-2-layout-feedback-component-detection-rules: done
+  3-3-custom-css-styled-implementation-detection: done
   epic-3-retrospective: optional
   epic-4: in-progress
-  4-1-source-line-extraction-diff-output: ready-for-dev
-  4-2-style-aware-replacement-generation: ready-for-dev
+  4-1-source-line-extraction-diff-output: done
+  4-2-style-aware-replacement-generation: done
   epic-4-retrospective: optional
