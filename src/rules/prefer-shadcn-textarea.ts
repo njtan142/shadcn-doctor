@@ -27,7 +27,9 @@ export const preferShadcnTextarea: Rule = {
         suggestion: 'Use <Textarea> from shadcn/ui.',
         element: 'textarea',
         replacement: 'Textarea',
-      };
+sourceLine: '',
+suggestedLine: '',
+};
     }
 
     return null;

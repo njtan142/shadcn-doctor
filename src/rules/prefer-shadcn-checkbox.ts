@@ -45,7 +45,9 @@ export const preferShadcnCheckbox: Rule = {
           suggestion: 'Use <Checkbox> from shadcn/ui.',
           element: 'input',
           replacement: 'Checkbox',
-        };
+sourceLine: '',
+suggestedLine: '',
+};
       }
     }
 

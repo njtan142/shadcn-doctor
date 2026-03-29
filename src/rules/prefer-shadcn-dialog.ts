@@ -23,7 +23,9 @@ export const preferShadcnDialog: Rule = {
         suggestion: 'Use <Dialog> from shadcn/ui.',
         element: 'dialog',
         replacement: 'Dialog',
-      };
+sourceLine: '',
+suggestedLine: '',
+};
     }
 
     if (tagName === 'div') {
@@ -43,7 +45,9 @@ export const preferShadcnDialog: Rule = {
           suggestion: 'Use <Dialog> from shadcn/ui.',
           element: 'div',
           replacement: 'Dialog',
-        };
+sourceLine: '',
+suggestedLine: '',
+};
       }
     }
 

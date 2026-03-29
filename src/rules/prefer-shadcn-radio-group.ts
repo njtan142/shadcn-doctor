@@ -42,7 +42,9 @@ export const preferShadcnRadioGroup: Rule = {
           suggestion: 'Use <RadioGroup> from shadcn/ui.',
           element: 'input',
           replacement: 'RadioGroup',
-        };
+sourceLine: '',
+suggestedLine: '',
+};
       }
     }
 

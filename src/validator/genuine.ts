@@ -2,21 +2,31 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { Project, SyntaxKind } from 'ts-morph';
 
-export async function validateGenuineComponents(targetPath: string): Promise<string[]> {
+export interface ValidateResult {
+  fakeComponents: string[];
+  genuinePaths: Set<string>;
+  uiDir: string | null;
+}
+
+export async function validateGenuineComponents(targetPath: string): Promise<ValidateResult> {
   const uiDir = await findUiDirectory(targetPath);
   if (!uiDir) {
-    return [];
+    return { fakeComponents: [], genuinePaths: new Set(), uiDir: null };
   }
 
   const fakeComponents: string[] = [];
+  const genuinePaths = new Set<string>();
   try {
     const files = await fs.readdir(uiDir, { withFileTypes: true });
+    const normalizedUiDir = uiDir.split(path.sep).join(path.posix.sep);
 
     for (const file of files) {
       if (file.isFile() && (file.name.endsWith('.tsx') || file.name.endsWith('.ts'))) {
         const filePath = path.join(uiDir, file.name);
         const isGenuine = await checkIsGenuine(filePath);
-        if (!isGenuine) {
+        if (isGenuine) {
+          genuinePaths.add(`${normalizedUiDir}/${file.name}`);
+        } else {
           fakeComponents.push(file.name);
         }
       }
@@ -25,7 +35,7 @@ export async function validateGenuineComponents(targetPath: string): Promise<str
     // Directory might not exist or be accessible
   }
 
-  return fakeComponents;
+  return { fakeComponents, genuinePaths, uiDir };
 }
 
 export async function findUiDirectory(targetPath: string): Promise<string | null> {

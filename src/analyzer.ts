@@ -34,7 +34,7 @@ export async function analyze(
     throw err;
   }
 
-  const fakeComponents = await validateGenuineComponents(absoluteRootPath);
+  const { fakeComponents, genuinePaths } = await validateGenuineComponents(absoluteRootPath);
   if (fakeComponents.length > 0) {
     console.error(
       '⚠️ Warning: The following components in your ui directory do not appear to be genuine shadcn/ui installations:',
@@ -47,7 +47,8 @@ export async function analyze(
 
   console.error(`⚡ Scanning ${absoluteRootPath}...`);
 
-  const files = await discoverFiles(absoluteRootPath);
+  const allFiles = await discoverFiles(absoluteRootPath);
+  const files = genuinePaths.size > 0 ? allFiles.filter((f) => !genuinePaths.has(f)) : allFiles;
   console.error(`Found ${files.length} TypeScript files\n`);
 
   if (files.length === 0) {

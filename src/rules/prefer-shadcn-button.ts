@@ -27,7 +27,9 @@ export const preferShadcnButton: Rule = {
         suggestion: 'Use <Button> from shadcn/ui.',
         element: 'button',
         replacement: 'Button',
-      };
+sourceLine: '',
+suggestedLine: '',
+};
     }
 
     return null;

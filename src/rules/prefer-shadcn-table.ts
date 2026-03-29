@@ -28,7 +28,9 @@ export const preferShadcnTable: Rule = {
         suggestion: 'Use <Table> from shadcn/ui.',
         element: 'table',
         replacement: 'Table',
-      };
+sourceLine: '',
+suggestedLine: '',
+};
     }
 
     return null;

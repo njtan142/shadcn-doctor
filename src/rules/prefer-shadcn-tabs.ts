@@ -39,7 +39,9 @@ export const preferShadcnTabs: Rule = {
           suggestion: 'Use <Tabs> from shadcn/ui.',
           element: 'button',
           replacement: 'Tabs',
-        };
+sourceLine: '',
+suggestedLine: '',
+};
       }
     }
 

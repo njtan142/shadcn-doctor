@@ -29,7 +29,9 @@ export const preferShadcnAlert: Rule = {
           suggestion: 'Use <Alert> from shadcn/ui.',
           element: 'div',
           replacement: 'Alert',
-        };
+sourceLine: '',
+suggestedLine: '',
+};
       }
     }
 

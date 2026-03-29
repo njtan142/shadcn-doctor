@@ -46,7 +46,9 @@ export const preferShadcnSwitch: Rule = {
         suggestion: 'Use <Switch> from shadcn/ui.',
         element: tagName,
         replacement: 'Switch',
-      };
+sourceLine: '',
+suggestedLine: '',
+};
     }
 
     return null;

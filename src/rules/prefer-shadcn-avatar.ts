@@ -52,7 +52,9 @@ export const preferShadcnAvatar: Rule = {
           suggestion: 'Use <Avatar> from shadcn/ui.',
           element: 'img',
           replacement: 'Avatar',
-        };
+sourceLine: '',
+suggestedLine: '',
+};
       }
     }
 

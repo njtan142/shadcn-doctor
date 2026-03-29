@@ -37,7 +37,9 @@ export const preferShadcnBadge: Rule = {
           suggestion: 'Use <Badge> from shadcn/ui.',
           element: tagName,
           replacement: 'Badge',
-        };
+sourceLine: '',
+suggestedLine: '',
+};
       }
     }
 
