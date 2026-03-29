@@ -5,7 +5,7 @@ const IGNORED_DIRS = new Set(['node_modules', 'dist', '.git', '.next', 'coverage
 
 export async function discoverFiles(targetPath: string): Promise<string[]> {
   const absoluteTargetPath = path.resolve(targetPath);
-  let stat;
+  let stat: Awaited<ReturnType<typeof fs.stat>>;
   try {
     stat = await fs.stat(absoluteTargetPath);
   } catch (err) {

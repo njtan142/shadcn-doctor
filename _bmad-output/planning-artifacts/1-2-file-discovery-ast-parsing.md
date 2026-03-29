@@ -1,6 +1,6 @@
 # Story 1.2: file-discovery-ast-parsing
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -78,4 +78,8 @@ Gemini 2.5 Pro
 - src/parser/index.ts
 - src/parser/parser.ts
 - src/parser/parser.test.ts
+
+## Review Findings
+
+- [x] [Review][Patch] Fix noImplicitAnyLet - untyped `stat` variable [src/scanner/scanner.ts:8] — fixed
 

@@ -44,7 +44,7 @@ story_location: "{project-root}/_bmad-output/implementation-artifacts"
 development_status:
   epic-1: in-progress
   1-1-project-initialization-cli-skeleton: done
-  1-2-file-discovery-ast-parsing: review
+  1-2-file-discovery-ast-parsing: done
   1-3-rule-engine-button-detection: done
   1-4-human-readable-output-formatter: done
   1-5-input-textarea-and-select-detection-rules: done
