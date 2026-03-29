@@ -1,5 +1,8 @@
 #!/usr/bin/env node
-import { createProgram } from '../dist/cli.js';
+import { createProgram, run } from '../dist/cli.js';
 
 const program = createProgram();
+program.action(async (path, opts) => {
+  await run(path, opts.format);
+});
 program.parse(process.argv);
