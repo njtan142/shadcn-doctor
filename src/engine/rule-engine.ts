@@ -26,10 +26,9 @@ export function runRules(
     : `${normalizedRootForward}/`;
   const absoluteFilePath = decodeURIComponent(sourceFile.getFilePath());
   const normalizedFilePath = absoluteFilePath.replace(/\\/g, '/');
-  if (
-    !normalizedFilePath.startsWith(normalizedRoot) &&
-    normalizedFilePath !== normalizedRootForward
-  ) {
+  const isInsideRoot =
+    normalizedFilePath.startsWith(normalizedRoot) || normalizedFilePath === normalizedRootForward;
+  if (!isInsideRoot) {
     const warning: Warning = {
       message: `File "${absoluteFilePath}" is outside rootPath "${rootPath}" — skipped`,
     };

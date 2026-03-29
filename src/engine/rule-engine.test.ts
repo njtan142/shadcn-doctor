@@ -1,10 +1,11 @@
-import { describe, it, expect } from 'vitest';
 import { Project, SyntaxKind } from 'ts-morph';
-import { runRules } from './rule-engine.js';
+import { describe, expect, it } from 'vitest';
 import type { Rule } from '../types.js';
+import { runRules } from './rule-engine.js';
 
 describe('Rule Engine', () => {
   const project = new Project();
+  const rootPath = process.cwd();
 
   it('should dispatch nodes to matching rules', () => {
     const sourceFile = project.createSourceFile('test.tsx', '<div><button /></div>');
@@ -15,14 +16,21 @@ describe('Rule Engine', () => {
       check: (node) => {
         if (node.getText() === '<button />') {
           return {
-            file: '', rule: 'mock-rule', violation: 'v', suggestion: 's', element: 'button', replacement: 'Button', line: 0, column: 0
+            file: '',
+            rule: 'mock-rule',
+            violation: 'v',
+            suggestion: 's',
+            element: 'button',
+            replacement: 'Button',
+            line: 0,
+            column: 0,
           };
         }
         return null;
-      }
+      },
     };
 
-    const { findings } = runRules(sourceFile, [mockRule], '/');
+    const { findings } = runRules(sourceFile, [mockRule], rootPath);
     expect(findings).toHaveLength(1);
     expect(findings[0].rule).toBe('mock-rule');
   });
@@ -35,10 +43,10 @@ describe('Rule Engine', () => {
       nodeTypes: [SyntaxKind.JsxSelfClosingElement],
       check: () => {
         throw new Error('Test Error');
-      }
+      },
     };
 
-    const { findings, warnings } = runRules(sourceFile, [errorRule], '/');
+    const { findings, warnings } = runRules(sourceFile, [errorRule], rootPath);
     expect(findings).toHaveLength(0);
     expect(warnings).toHaveLength(1);
     expect(warnings[0].message).toContain('Rule "error-rule" failed');
