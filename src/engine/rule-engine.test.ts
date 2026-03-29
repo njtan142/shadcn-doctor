@@ -5,7 +5,7 @@ import { runRules } from './rule-engine.js';
 
 describe('Rule Engine', () => {
   const project = new Project();
-  const rootPath = process.cwd();
+  const rootPath = process.cwd().replace(/\\/g, '/').replace(/\/$/, '');
 
   it('should dispatch nodes to matching rules', () => {
     const sourceFile = project.createSourceFile('test.tsx', '<div><button /></div>');

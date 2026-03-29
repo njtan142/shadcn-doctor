@@ -12,6 +12,12 @@
 
 ## Deferred from: code review of 1-5-input-textarea-and-select-detection-rules (2026-03-29)
 
-- Integration test creates inline source file at a `projectRoot`-resolved path; if `projectRoot` resolves differently in CI the file-outside-root guard fires, producing 0 findings and a misleading test failure (`src/rules/all-rules-integration.test.ts:28`)
+- Missing test for `role="switch"` checkbox exclusion — checkbox rule correctly excludes `role="switch"` in logic but has no dedicated test case proving the exclusion path works (`src/rules/prefer-shadcn-checkbox.test.ts`)
 - Self-closing `<textarea />` and `<select />` JSX variants are handled by the rules but have no dedicated test exercising that path — regression risk if `nodeTypes` changes in future (`src/rules/prefer-shadcn-textarea.ts`, `prefer-shadcn-select.ts`)
 - `absoluteFilePath` from ts-morph may contain URI-encoded characters (e.g. `%20` for spaces), causing the `startsWith` path guard in `runRules` to fail and silently skip the file with a warning instead of processing it (`src/engine/rule-engine.ts:15`)
+
+## Deferred from: code review of story 1-3 rule engine button detection (2026-03-29)
+
+- `decodeURIComponent` may throw URIError on malformed URI sequences — existing code outside diff scope, not introduced by this change (`src/engine/rule-engine.ts:27`)
+- AST walking pattern verification — relevant code not visible in this diff (rule engine implementation)
+- Finding sort order verification — relevant code not visible in this diff (`src/analyzer.ts` sorting implementation)

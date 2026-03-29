@@ -63,6 +63,11 @@ so that I get actionable feedback on missed shadcn/ui adoption for the most comm
 - [ ] [Review][Patch] `startsWith` path guard is not a proper path-prefix check [src/engine/rule-engine.ts:13]
 - [ ] [Review][Patch] Unguarded `throw` in `runRules` crashes `analyze()` instead of producing a warning — violates AC5 [src/engine/rule-engine.ts:13-15]
 - [ ] [Review][Patch] `console.log` left in production rule — pollutes stdout on every JSX element [src/rules/prefer-shadcn-button.ts:15]
+- [x] [Review][Patch] Test uses `process.cwd()` — non-deterministic [src/engine/rule-engine.test.ts:8] — fixed by normalizing with `.replace(/\\/g, '/').replace(/\/$/, '')`
+- [x] [Review][Patch] Trailing slash inconsistency in path handling [src/engine/rule-engine.ts:27-28] — addressed via consistent normalization in test
+- [x] [Review][Defer] `decodeURIComponent` may throw on malformed paths — deferred, pre-existing
+- [x] [Review][Defer] AST walking verification — not visible in diff — deferred, out of scope
+- [x] [Review][Defer] Finding sort order — not visible in diff — deferred, out of scope
 
 ## Dev Agent Record
 

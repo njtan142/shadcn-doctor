@@ -45,7 +45,7 @@ development_status:
   epic-1: in-progress
   1-1-project-initialization-cli-skeleton: review
   1-2-file-discovery-ast-parsing: review
-  1-3-rule-engine-button-detection: ready-for-dev
+  1-3-rule-engine-button-detection: done
   1-4-human-readable-output-formatter: ready-for-dev
   1-5-input-textarea-and-select-detection-rules: done
   1-6-cli-argument-handling-error-cases: done
