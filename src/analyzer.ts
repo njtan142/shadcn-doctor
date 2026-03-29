@@ -26,11 +26,15 @@ export async function analyze(targetPath: string): Promise<AnalysisResult> {
     throw err;
   }
 
+  console.error(`\u26a1 Scanning ${absoluteRootPath}...`);
   const files = await discoverFiles(absoluteRootPath);
+  console.error(`Found ${files.length} TypeScript files`);
 
   if (files.length === 0) {
     throw new Error(`No TypeScript files found in: ${targetPath}`);
   }
+
+  console.error(`Analyzing...`);
 
   const allFindings: Finding[] = [];
   const allWarnings: Warning[] = [];
