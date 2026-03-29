@@ -1,16 +1,18 @@
+import fs from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { select } from '@inquirer/prompts';
 import { Command, Option } from 'commander';
-import { analyze } from './analyzer.js';
+import { type AnalyzeOptions, analyze } from './analyzer.js';
 import { formatHuman } from './formatters/human-formatter.js';
 import { formatJson } from './formatters/json-formatter.js';
 
 const require = createRequire(import.meta.url);
 const { version } = require('../package.json') as { version: string };
 
-export async function run(targetPath = '.', format = 'human') {
+export async function run(targetPath = '.', format = 'human', options: AnalyzeOptions = {}) {
   try {
-    const result = await analyze(targetPath);
+    const result = await analyze(targetPath, options);
 
     // Warnings always go to stderr
     for (const warning of result.warnings) {
@@ -45,10 +47,63 @@ export function createProgram() {
         .default('human')
         .choices(['human', 'json']),
     )
+    .addOption(new Option('--bail', 'Stop at first file suggestion').default(false))
     .addHelpText(
       'after',
       '\nExit codes:\n  0  No findings (pass)\n  1  Findings detected\n  2  Fatal error',
     );
+
+  program
+    .command('setup')
+    .description('Interactive setup for shadcn-doctor configuration')
+    .action(async () => {
+      try {
+        const style = await select({
+          message: 'Formatting style:',
+          choices: [
+            { name: 'Compact', value: 'compact' },
+            { name: 'Expanded', value: 'expanded' },
+            { name: 'Prettier', value: 'prettier' },
+          ],
+        });
+
+        const indent = await select<number | string>({
+          message: 'Indent style:',
+          choices: [
+            { name: '2-space', value: 2 },
+            { name: '4-space', value: 4 },
+            { name: 'Tabs', value: 'tab' },
+          ],
+        });
+
+        const quotes = await select({
+          message: 'Quote style:',
+          choices: [
+            { name: 'Single quotes', value: 'single' },
+            { name: 'Double quotes', value: 'double' },
+          ],
+        });
+
+        const config = {
+          style,
+          indent,
+          quotes,
+        };
+
+        await fs.writeFile('.shadcn-doctorrc.json', JSON.stringify(config, null, 2), 'utf-8');
+        process.stdout.write('\u2714 Created .shadcn-doctorrc.json successfully.\n');
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name === 'ExitPromptError') {
+          process.stdout.write('\u2718 Setup cancelled.\n');
+          process.exitCode = 1;
+          return;
+        }
+        const message = err instanceof Error ? err.message : String(err);
+        process.stderr.write(`Error during setup: ${message}\n`);
+        process.exitCode = 2;
+      }
+    });
+
   return program;
 }
 
@@ -57,8 +112,8 @@ const isMain =
 
 if (isMain) {
   const program = createProgram();
-  program.action(async (targetPath: string, options: { format: string }) => {
-    await run(targetPath, options.format);
+  program.action(async (targetPath: string, options: { format: string; bail: boolean }) => {
+    await run(targetPath, options.format, { bail: options.bail });
   });
 
   program.parse(process.argv);

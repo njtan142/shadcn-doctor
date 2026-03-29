@@ -6,7 +6,14 @@ import { ALL_RULES } from './rules/index.js';
 import { discoverFiles } from './scanner/scanner.js';
 import type { AnalysisResult, Finding, Warning } from './types.js';
 
-export async function analyze(targetPath: string): Promise<AnalysisResult> {
+export interface AnalyzeOptions {
+  bail?: boolean;
+}
+
+export async function analyze(
+  targetPath: string,
+  options: AnalyzeOptions = {},
+): Promise<AnalysisResult> {
   const absoluteRootPath = path.resolve(targetPath);
 
   if (!targetPath.trim()) {
@@ -57,6 +64,10 @@ export async function analyze(targetPath: string): Promise<AnalysisResult> {
 
     allFindings.push(...findings);
     allWarnings.push(...warnings);
+
+    if (options.bail && allFindings.length > 0) {
+      break;
+    }
   }
 
   if (files.length > 0 && filesScanned === 0) {
