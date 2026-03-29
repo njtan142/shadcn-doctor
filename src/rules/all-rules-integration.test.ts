@@ -46,18 +46,17 @@ describe('all-rules integration', () => {
     const sourceFile = project.getSourceFile(filePath) ?? project.addSourceFileAtPath(filePath);
     const { findings } = runRules(sourceFile, ALL_RULES, fixturesDir);
 
-    expect(findings.length).toBeGreaterThan(0);
-
-    // Findings must be in line-number order
-    const lines = findings.map((f) => f.line);
-    const sortedLines = [...lines].sort((a, b) => a - b);
-    expect(lines).toEqual(sortedLines);
+    expect(findings.length).toBeGreaterThanOrEqual(6);
 
     const ruleIds = findings.map((f) => f.rule);
     expect(ruleIds).toContain('prefer-shadcn-button');
     expect(ruleIds).toContain('prefer-shadcn-input');
     expect(ruleIds).toContain('prefer-shadcn-textarea');
     expect(ruleIds).toContain('prefer-shadcn-select');
+
+    const lines = findings.map((f) => f.line);
+    const sortedLines = [...lines].sort((a, b) => a - b);
+    expect(lines).toEqual(sortedLines);
   });
 
   it('should produce no findings when all shadcn/ui components are used', () => {

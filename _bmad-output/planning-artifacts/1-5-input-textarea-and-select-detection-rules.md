@@ -1,6 +1,6 @@
 # Story 1.5: Input, Textarea, and Select Detection Rules
 
-Status: in-progress
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -335,6 +335,12 @@ None.
 - [x] [Review][Defer] Integration test creates inline file at projectRoot-resolved path; if projectRoot resolves differently in CI the file-outside-root guard fires and the test produces 0 findings [src/rules/all-rules-integration.test.ts:28] — deferred, pre-existing
 - [x] [Review][Defer] Self-closing `<textarea />` and `<select />` JSX variants are handled by the rules but have no dedicated test coverage — regression risk if nodeTypes changes [src/rules/prefer-shadcn-textarea.ts, prefer-shadcn-select.ts] — deferred, pre-existing
 - [x] [Review][Defer] absoluteFilePath from ts-morph may contain URI-encoded characters (e.g. %20 in spaces), causing startsWith path guard to fail and silently skip the file [src/engine/rule-engine.ts:15] — deferred, pre-existing
+
+### Review Findings (HEAD commit 64763b4)
+
+- [x] [Review][Patch] Incomplete assertion coverage in prefer-shadcn-button.test.ts — only first 3 of 7 findings verified — added assertions for findings[3] through findings[6] [src/rules/prefer-shadcn-button.test.ts:19-32]
+- [x] [Review][Patch] Incomplete assertion coverage in prefer-shadcn-input.test.ts — only first of 4 findings verified — added assertions for findings[1] through findings[3] [src/rules/prefer-shadcn-input.test.ts:19-27]
+- [x] [Review][Patch] Integration test `toBeGreaterThan(0)` loses regression precision — replaced with `toBeGreaterThanOrEqual(6)` while retaining rule ID enumeration [src/rules/all-rules-integration.test.ts:49]
 
 ## Change Log
 

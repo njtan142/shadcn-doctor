@@ -30,6 +30,10 @@ describe('prefer-shadcn-button rule', () => {
     expect(findings[2]).toMatchObject({
       line: 8,
     });
+    expect(findings[3]).toMatchObject({ line: 29 });
+    expect(findings[4]).toMatchObject({ line: 32 });
+    expect(findings[5]).toMatchObject({ line: 37 });
+    expect(findings[6]).toMatchObject({ line: 38 });
   });
 
   it('should not detect shadcn/ui <Button> component', () => {

@@ -24,6 +24,9 @@ describe('prefer-shadcn-input rule', () => {
       replacement: 'Input',
       line: 9,
     });
+    expect(findings[1]).toMatchObject({ line: 12 });
+    expect(findings[2]).toMatchObject({ line: 13 });
+    expect(findings[3]).toMatchObject({ line: 15 });
   });
 
   it('should not detect shadcn/ui <Input> component', () => {
