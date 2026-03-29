@@ -9,13 +9,26 @@ import type { AnalysisResult, Finding, Warning } from './types.js';
 export async function analyze(targetPath: string): Promise<AnalysisResult> {
   const absoluteRootPath = path.resolve(targetPath);
 
+  if (!targetPath.trim()) {
+    throw new Error('Path cannot be empty');
+  }
+
+  let stats: ReturnType<typeof fs.stat> extends Promise<infer T> ? T : never;
   try {
-    await fs.stat(targetPath);
+    stats = await fs.stat(absoluteRootPath);
   } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-      throw new Error(`Path not found: ${targetPath}`);
+    const code = (err as NodeJS.ErrnoException).code;
+    if (code === 'ENOENT') {
+      throw new Error(`Path not found: ${absoluteRootPath}`);
+    }
+    if (code === 'EACCES') {
+      throw new Error(`Permission denied: ${absoluteRootPath}`);
     }
     throw err;
+  }
+
+  if (!stats.isDirectory()) {
+    throw new Error(`Path is not a directory: ${absoluteRootPath}`);
   }
 
   const files = await discoverFiles(absoluteRootPath);
