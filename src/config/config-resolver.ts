@@ -34,6 +34,11 @@ export function resolveConfig(): Config {
     const content = fs.readFileSync(configPath, 'utf-8');
     const parsed = JSON.parse(content);
 
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+      console.error('⚠ Invalid config: .shadcn-doctorrc.json must be an object (using defaults)');
+      return { ...defaultConfig };
+    }
+
     const config: Config = { ...defaultConfig };
 
     if (parsed.style === 'compact' || parsed.style === 'expanded' || parsed.style === 'prettier') {

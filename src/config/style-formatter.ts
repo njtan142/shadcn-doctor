@@ -4,11 +4,64 @@ function getIndent(indent: number): string {
   return ' '.repeat(indent);
 }
 
-function applyQuotes(line: string, quoteStyle: 'single' | 'double'): string {
-  if (quoteStyle === 'single') {
-    return line.replace(/"([^"]*)"/g, "'$1'");
+function displayWidth(str: string): number {
+  let width = 0;
+  for (const char of str) {
+    const code = char.codePointAt(0) ?? 0;
+    if (code >= 0x10000) {
+      width += 2;
+    } else if (code > 0x7f) {
+      width += 2;
+    } else {
+      width += 1;
+    }
   }
-  return line;
+  return width;
+}
+
+function applyQuotes(line: string, quoteStyle: 'single' | 'double'): string {
+  if (quoteStyle !== 'single') {
+    return line;
+  }
+  const result: string[] = [];
+  let i = 0;
+  let braceDepth = 0;
+
+  while (i < line.length) {
+    const char = line[i];
+    if (char === '{') {
+      braceDepth++;
+      result.push(char);
+    } else if (char === '}') {
+      braceDepth = Math.max(0, braceDepth - 1);
+      result.push(char);
+    } else if (char === '"' && braceDepth === 0) {
+      let end = i + 1;
+      while (end < line.length && line[end] !== '"') {
+        if (line[end] === '\\') {
+          result.push(line[end]);
+          if (end + 1 < line.length) {
+            result.push(line[end + 1]);
+            end += 2;
+            continue;
+          }
+          break;
+        }
+        end++;
+      }
+      result.push("'");
+      for (let j = i + 1; j < end; j++) {
+        result.push(line[j]);
+      }
+      result.push("'");
+      i = end;
+    } else {
+      result.push(char);
+    }
+    i++;
+  }
+
+  return result.join('');
 }
 
 function findOpeningTagEnd(sourceLine: string): number {
@@ -54,9 +107,11 @@ function formatCompact(sourceLine: string, replacement: string, config: Config):
   if (!elementMatch) {
     return `<${replacement}>`;
   }
-  const tagContent = sourceLine.slice(elementMatch[0].length, tagEnd + 1);
-  const childrenAndClosing = sourceLine.slice(tagEnd + 1);
-  return applyQuotes(`<${replacement}${tagContent}${childrenAndClosing}`, config.quotes);
+  const tagContent = sourceLine.slice(elementMatch[0].length, tagEnd);
+  const isSelfClosing = tagEnd > 0 && sourceLine[tagEnd - 1] === '/';
+  const closingSeq = isSelfClosing ? `/>` : `${sourceLine[tagEnd]}${sourceLine.slice(tagEnd + 1)}`;
+  const attrs = isSelfClosing ? tagContent.slice(0, -1) : tagContent;
+  return applyQuotes(`<${replacement}${attrs}${closingSeq}`, config.quotes);
 }
 
 function parseAttributes(attrsStr: string): string[] {
@@ -71,14 +126,11 @@ function parseAttributes(attrsStr: string): string[] {
   }
 
   const props: string[] = [];
-  let i = 0;
   let currentProp = '';
   let inAttr = false;
   let attrChar = '';
 
-  while (i < attrsStr.length) {
-    const char = attrsStr[i];
-
+  for (const char of attrsStr) {
     if (inAttr) {
       currentProp += char;
       if (char === attrChar) {
@@ -88,7 +140,7 @@ function parseAttributes(attrsStr: string): string[] {
       currentProp += char;
       inAttr = true;
       attrChar = char;
-    } else if (char === ' ' || char === '\n' || char === '\t') {
+    } else if (/\s/.test(char)) {
       if (currentProp.trim()) {
         props.push(currentProp.trim());
       }
@@ -96,7 +148,6 @@ function parseAttributes(attrsStr: string): string[] {
     } else {
       currentProp += char;
     }
-    i++;
   }
 
   if (currentProp.trim()) {
@@ -143,7 +194,7 @@ function formatExpanded(sourceLine: string, replacement: string, config: Config)
 
 function formatPrettier(sourceLine: string, replacement: string, config: Config): string {
   const compactResult = formatCompact(sourceLine, replacement, config);
-  if (compactResult.length <= config.printWidth) {
+  if (displayWidth(compactResult) < config.printWidth) {
     return compactResult;
   }
   return formatExpanded(sourceLine, replacement, config);
@@ -154,6 +205,11 @@ export function formatSuggestedLine(
   replacement: string,
   config: Config,
 ): string {
+  const MAX_INPUT_LENGTH = 10000;
+  if (sourceLine.length > MAX_INPUT_LENGTH) {
+    return `<${replacement}>`;
+  }
+
   switch (config.style) {
     case 'expanded':
       return formatExpanded(sourceLine, replacement, config);

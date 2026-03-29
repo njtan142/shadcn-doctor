@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { getDefaultConfig, resolveConfig } from './config-resolver.js';
 
 describe('Config Resolver', () => {
   const testConfigPath = path.join(process.cwd(), '.shadcn-doctorrc.json');
@@ -17,8 +18,7 @@ describe('Config Resolver', () => {
     }
   });
 
-  it('should return default config when no config file exists', async () => {
-    const { resolveConfig, getDefaultConfig } = await import('./config-resolver.js');
+  it('should return default config when no config file exists', () => {
     const config = resolveConfig();
     const defaults = getDefaultConfig();
 
@@ -29,8 +29,7 @@ describe('Config Resolver', () => {
     expect(config).toEqual(defaults);
   });
 
-  it('should apply valid config settings', async () => {
-    const { resolveConfig } = await import('./config-resolver.js');
+  it('should apply valid config settings', () => {
     fs.writeFileSync(
       testConfigPath,
       JSON.stringify({
@@ -49,8 +48,7 @@ describe('Config Resolver', () => {
     expect(config.printWidth).toBe(100);
   });
 
-  it('should use defaults for invalid config values', async () => {
-    const { resolveConfig } = await import('./config-resolver.js');
+  it('should use defaults for invalid config values', () => {
     fs.writeFileSync(
       testConfigPath,
       JSON.stringify({
@@ -69,8 +67,7 @@ describe('Config Resolver', () => {
     expect(config.printWidth).toBe(80);
   });
 
-  it('should partially apply valid config values', async () => {
-    const { resolveConfig } = await import('./config-resolver.js');
+  it('should partially apply valid config values', () => {
     fs.writeFileSync(
       testConfigPath,
       JSON.stringify({
