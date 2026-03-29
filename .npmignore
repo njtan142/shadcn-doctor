@@ -1,0 +1,32 @@
+# Source and configs
+src/
+_bmad-output/
+biome.json
+tsdown.config.ts
+tsconfig.json
+vitest.config.ts
+
+# Development files
+*.test.ts
+*.test.tsx
+*.test.d.ts
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Cache
+.cache/
+.nyc_output/

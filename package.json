@@ -1,11 +1,24 @@
 {
   "name": "shadcn-doctor",
   "version": "1.0.0",
-  "description": "shadcn-doctor cli",
+  "description": "Detect missed shadcn/ui component adoption in TypeScript/TSX files",
   "type": "module",
   "bin": {
     "shadcn-doctor": "bin/shadcn-doctor.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/njtan142/shadcn-doctor.git"
+  },
+  "keywords": [
+    "shadcn",
+    "shadcn-ui",
+    "cli",
+    "detection",
+    "ui-components"
+  ],
+  "author": "Niño James Tan <njtan142@gmail.com>",
+  "license": "MIT",
   "scripts": {
     "build": "tsdown",
     "lint": "biome check src",
