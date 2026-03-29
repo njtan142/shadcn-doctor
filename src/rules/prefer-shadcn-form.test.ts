@@ -53,4 +53,38 @@ export const Clean = () => <Form />;`,
     const { findings } = runRules(sourceFile, [preferShadcnForm], rootDir);
     expect(findings).toHaveLength(0);
   });
+
+  it('should not flag native <form> inside shadcn <Form> component', () => {
+    const sourceFile = project.createSourceFile(
+      '__test_prefer_shadcn_form_provider__.tsx',
+      `import { Form } from '@/components/ui/form';
+export const Test = () => (
+  <Form {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <input />
+    </form>
+  </Form>
+);`,
+      { overwrite: true },
+    );
+    const { findings } = runRules(sourceFile, [preferShadcnForm], rootDir);
+    expect(findings).toHaveLength(0);
+  });
+
+  it('should not flag native <form> inside FormProvider', () => {
+    const sourceFile = project.createSourceFile(
+      '__test_prefer_shadcn_form_provider_direct__.tsx',
+      `import { FormProvider } from 'react-hook-form';
+export const Test = () => (
+  <FormProvider {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <input />
+    </form>
+  </FormProvider>
+);`,
+      { overwrite: true },
+    );
+    const { findings } = runRules(sourceFile, [preferShadcnForm], rootDir);
+    expect(findings).toHaveLength(0);
+  });
 });
