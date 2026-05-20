@@ -93,3 +93,6 @@ logs
 
 # Testing
 .nyc_output
+
+# shadcn-doctor cache
+.shadcn-doctor-cache.json

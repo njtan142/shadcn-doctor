@@ -19,7 +19,7 @@ describe('prefer-shadcn-input rule', () => {
     expect(findings).toHaveLength(4);
     expect(findings[0]).toMatchObject({
       rule: 'prefer-shadcn-input',
-      violation: 'Raw <input> detected. Use <Input> from shadcn/ui.',
+      violation: 'Raw <input> detected. Use <Input> from shadcn/ui or wrap in <Field>.',
       element: 'input',
       replacement: 'Input',
       line: 9,

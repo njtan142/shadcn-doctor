@@ -17,6 +17,7 @@ import { preferShadcnContextMenu } from './prefer-shadcn-context-menu.js';
 import { preferShadcnDialog } from './prefer-shadcn-dialog.js';
 import { preferShadcnDrawer } from './prefer-shadcn-drawer.js';
 import { preferShadcnDropdownMenu } from './prefer-shadcn-dropdown-menu.js';
+import { preferShadcnField } from './prefer-shadcn-field.js';
 import { preferShadcnForm } from './prefer-shadcn-form.js';
 import { preferShadcnHoverCard } from './prefer-shadcn-hover-card.js';
 import { preferShadcnInput } from './prefer-shadcn-input.js';
@@ -63,6 +64,7 @@ export const ALL_RULES: Rule[] = [
   preferShadcnDialog,
   preferShadcnDrawer,
   preferShadcnDropdownMenu,
+  preferShadcnField,
   preferShadcnForm,
   preferShadcnHoverCard,
   preferShadcnInputOtp,
@@ -112,6 +114,7 @@ export {
   preferShadcnDialog,
   preferShadcnDrawer,
   preferShadcnDropdownMenu,
+  preferShadcnField,
   preferShadcnForm,
   preferShadcnHoverCard,
   preferShadcnInput,

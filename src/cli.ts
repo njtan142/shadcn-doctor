@@ -48,6 +48,8 @@ export function createProgram() {
         .choices(['human', 'json']),
     )
     .addOption(new Option('--bail', 'Stop at first file suggestion').default(false))
+    .addOption(new Option('--no-cache', 'Disable incremental scanning cache').default(true))
+    .addOption(new Option('--clear-cache', 'Clear the scan cache before running').default(false))
     .addHelpText(
       'after',
       '\nExit codes:\n  0  No findings (pass)\n  1  Findings detected\n  2  Fatal error',
@@ -112,9 +114,18 @@ const isMain =
 
 if (isMain) {
   const program = createProgram();
-  program.action(async (targetPath: string, options: { format: string; bail: boolean }) => {
-    await run(targetPath, options.format, { bail: options.bail });
-  });
+  program.action(
+    async (
+      targetPath: string,
+      options: { format: string; bail: boolean; cache: boolean; clearCache: boolean },
+    ) => {
+      await run(targetPath, options.format, {
+        bail: options.bail,
+        cache: options.cache,
+        clearCache: options.clearCache,
+      });
+    },
+  );
 
   program.parse(process.argv);
 }
